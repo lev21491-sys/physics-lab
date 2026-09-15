@@ -7,6 +7,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Подключение Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <style>
     :root {
       --primary: #2563eb;
@@ -636,7 +641,7 @@
       min-height: 20px;
     }
 
-    /* Модальное окно инструкции */
+    /* Модальное окно */
     .modal-backdrop {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -721,7 +726,7 @@
     <div class="subtitle">Интерактивные тренажёры и бланки оформления работ</div>
   </header>
 
-  <!-- Навигационные вкладки -->
+  <!-- Навигация -->
   <div class="tabs-nav">
     <button class="tab-btn active" id="tabCatalog">📚 Каталог заданий</button>
     <button class="tab-btn" id="tabSimulator">🔬 Тренажёр: Работа №1 (Метод рядов)</button>
@@ -742,17 +747,21 @@
       </div>
       <div class="form-row">
         <label>Описание задания, цели и задачи:</label>
-        <textarea id="newTaskDesc" rows="2" placeholder="Укажите цели, требуемые расчеты и правила формулирования выводов..."></textarea>
+        <textarea id="newTaskDesc" rows="2" placeholder="Укажите цели, требуемые расчеты и правила оформления..."></textarea>
       </div>
       <div class="form-row">
         <label>Ссылка на файл оформления (Word, Яндекс.Диск, Google Документ):</label>
         <input type="text" id="newTaskLink" placeholder="https://disk.yandex.ru/... или ссылка на документ">
       </div>
-      <button class="btn-add-task" id="btnSaveNewTask">Опубликовать задание для 7 класса</button>
+      <button class="btn-add-task" id="btnSaveNewTask">Опубликовать задание для всех учеников</button>
     </div>
 
-    <!-- Список всех заданий -->
-    <div id="tasksContainer" style="display:flex; flex-direction:column; gap:12px;"></div>
+    <!-- Список заданий (загружается из Firebase) -->
+    <div id="tasksContainer" style="display:flex; flex-direction:column; gap:12px;">
+      <div style="background:#fff; border-radius:14px; padding:20px; text-align:center; color:#64748b; font-weight:600;">
+        ⏳ Загрузка заданий из базы данных...
+      </div>
+    </div>
 
   </div>
 
@@ -882,6 +891,23 @@
 
 <script>
   /* ============================================================
+     ПОДКЛЮЧЕНИЕ FIREBASE REALTIME DATABASE
+  ============================================================ */
+  const firebaseConfig = {
+    apiKey: "AIzaSyCrb0AZFDLZLcH2PkYTd3OxL7gKGTqnbWM",
+    authDomain: "physics-7-lab.firebaseapp.com",
+    databaseURL: "https://physics-7-lab-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "physics-7-lab",
+    storageBucket: "physics-7-lab.firebasestorage.app",
+    messagingSenderId: "943954671929",
+    appId: "1:943954671929:web:4759ec5ea7191700b090e8"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const tasksRef = db.ref('tasks_7th_grade');
+
+  /* ============================================================
      СИСТЕМА КЛЮЧЕЙ И РЕЖИМ УЧИТЕЛЯ
   ============================================================ */
   const TEACHER_KEYS = [
@@ -933,7 +959,7 @@
   };
 
   /* ============================================================
-     БАЗА ДАННЫХ ЗАДАНИЙ (ВСТРОЕННЫЕ + ПОЛЬЗОВАТЕЛЬСКИЕ)
+     ИСХОДНЫЕ ЗАДАНИЯ ПО УМОЛЧАНИЮ
   ============================================================ */
   const INITIAL_TASKS = [
     {
@@ -982,17 +1008,30 @@
     }
   ];
 
-  let currentTasks = JSON.parse(localStorage.getItem('phys_tasks_list_v4')) || INITIAL_TASKS;
+  let currentTasks = [];
 
-  function saveTasks() {
-    localStorage.setItem('phys_tasks_list_v4', JSON.stringify(currentTasks));
-  }
+  // Синхронизация с базой данных в РЕАЛЬНОМ ВРЕМЕНИ
+  tasksRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (!data) {
+      // Если база ещё пустая, заливаем в неё 5 стандартных работ
+      tasksRef.set(INITIAL_TASKS);
+      return;
+    }
+    // Преобразуем данные в массив
+    if (Array.isArray(data)) {
+      currentTasks = data.filter(Boolean);
+    } else {
+      currentTasks = Object.values(data);
+    }
+    renderTasks();
+  });
 
   function renderTasks() {
     const container = document.getElementById('tasksContainer');
     container.innerHTML = '';
 
-    if (currentTasks.length === 0) {
+    if (!currentTasks || currentTasks.length === 0) {
       container.innerHTML = '<div style="background:#fff; border-radius:14px; padding:20px; text-align:center; color:#64748b; font-weight:600;">Список заданий пуст. Войдите как учитель, чтобы добавить новые работы или нажмите «Сброс к исходным».</div>';
       return;
     }
@@ -1032,6 +1071,7 @@
     });
   }
 
+  // Добавление задания прямо в Firebase
   document.getElementById('btnSaveNewTask').onclick = () => {
     const title = document.getElementById('newTaskTitle').value.trim();
     const desc = document.getElementById('newTaskDesc').value.trim();
@@ -1051,34 +1091,34 @@
       customLink: link || null
     };
 
-    currentTasks.push(newTask);
-    saveTasks();
-    renderTasks();
-
-    document.getElementById('newTaskTitle').value = '';
-    document.getElementById('newTaskDesc').value = '';
-    document.getElementById('newTaskLink').value = '';
-    alert("Задание успешно добавлено в каталог 7 класса!");
+    const updated = [...currentTasks, newTask];
+    tasksRef.set(updated).then(() => {
+      document.getElementById('newTaskTitle').value = '';
+      document.getElementById('newTaskDesc').value = '';
+      document.getElementById('newTaskLink').value = '';
+      alert("Задание мгновенно опубликовано для всего класса через Firebase!");
+    }).catch(err => {
+      alert("Ошибка записи в базу: " + err.message);
+    });
   };
 
+  // Удаление задания из Firebase
   window.deleteTask = function(taskId) {
-    if (confirm("Вы уверены, что хотите удалить это задание из списка?")) {
-      currentTasks = currentTasks.filter(t => t.id !== taskId);
-      saveTasks();
-      renderTasks();
+    if (confirm("Вы уверены, что хотите удалить это задание из базы данных?")) {
+      const updated = currentTasks.filter(t => t.id !== taskId);
+      tasksRef.set(updated).catch(err => alert("Ошибка: " + err.message));
     }
   };
 
+  // Сброс к исходным
   document.getElementById('btnResetDefaultTasks').onclick = () => {
-    if (confirm("Вернуть исходные 5 стандартных лабораторных работ?")) {
-      currentTasks = [...INITIAL_TASKS];
-      saveTasks();
-      renderTasks();
+    if (confirm("Вернуть исходные 5 лабораторных работ в общую базу данных?")) {
+      tasksRef.set(INITIAL_TASKS);
     }
   };
 
   /* ============================================================
-     НАВИГАЦИЯ И СКАЧИВАНИЕ ФАЙЛОВ WORD
+     НАВИГАЦИЯ И СКАЧИВАНИЕ WORD (.DOC)
   ============================================================ */
   const tabCatalog = document.getElementById('tabCatalog');
   const tabSimulator = document.getElementById('tabSimulator');
@@ -1175,7 +1215,7 @@
   }
 
   /* ============================================================
-     ИНТЕРАКТИВНЫЙ ТРЕНАЖЁР РЯДОВ (CANVAS)
+     СИМУЛЯТОР МЕТОДА РЯДОВ (CANVAS)
   ============================================================ */
   const canvas = document.getElementById('labCanvas');
   const ctx = canvas.getContext('2d');
@@ -1492,13 +1532,13 @@
 
     const msg = document.getElementById('statusMsg');
     if (allOk) {
-      msg.innerHTML = `<span style="color:var(--success);">✓ Отлично! Показания сняты верно, расчёт среднего размера крупинки точен.</span>`;
+      msg.innerHTML = `<span style="color:var(--success);">✓ Отлично! Показания сняты верно, расчёт точен.</span>`;
     } else {
       msg.innerHTML = `<span style="color:var(--danger);">✕ Есть ошибки в подсвеченных полях. Проверьте снятые показания и формулу деления.</span>`;
     }
   };
 
-  // Инициализация при загрузке
+  // Старт
   resetObjectSize();
   updateTeacherUI();
   document.getElementById('btnAlignZero').click();
