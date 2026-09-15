@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Физика 7 класс: Лабораторные работы</title>
+  <title>Физическая Онлайн-Лаборатория 7–11 класс</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Подключение Firebase SDK -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -17,15 +17,15 @@
       --primary: #2563eb;
       --primary-dark: #1d4ed8;
       --teacher-accent: #059669;
+      --hw-accent: #d97706;
       --bg: #0f172a;
       --surface: #ffffff;
-      --surface-subtle: #f8fafc;
       --border: #e2e8f0;
       --text: #0f172a;
       --text-muted: #64748b;
       --success: #16a34a;
       --danger: #ef4444;
-      --danger-bg: #fee2e2;
+      --releon: #0284c7;
     }
 
     * {
@@ -41,7 +41,7 @@
       background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
       color: var(--text);
       min-height: 100vh;
-      padding: 16px 12px 40px;
+      padding: 16px 12px 60px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -49,13 +49,13 @@
 
     .container {
       width: 100%;
-      max-width: 880px;
+      max-width: 960px;
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    /* Верхняя панель */
+    /* Верхняя строка */
     .top-header {
       display: flex;
       justify-content: space-between;
@@ -94,11 +94,7 @@
       backdrop-filter: blur(8px);
       transition: 0.2s;
     }
-
-    .btn-teacher-auth:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: #ffffff;
-    }
+    .btn-teacher-auth:hover { background: rgba(255, 255, 255, 0.2); }
 
     .teacher-logged-pill {
       display: none;
@@ -125,18 +121,18 @@
 
     header {
       text-align: center;
-      padding: 4px 0 8px;
+      padding: 4px 0 6px;
     }
 
     h1 {
-      font-size: 1.45rem;
+      font-size: 1.4rem;
       font-weight: 800;
       color: #ffffff;
       letter-spacing: -0.02em;
     }
 
     .subtitle {
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       color: #94a3b8;
       margin-top: 4px;
     }
@@ -144,22 +140,24 @@
     /* Навигация */
     .tabs-nav {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       background: rgba(255, 255, 255, 0.08);
       padding: 6px;
       border-radius: 14px;
       border: 1px solid rgba(255, 255, 255, 0.12);
+      flex-wrap: wrap;
     }
 
     .tab-btn {
       flex: 1;
-      padding: 10px 14px;
+      min-width: 130px;
+      padding: 10px 10px;
       border-radius: 10px;
       border: none;
       background: transparent;
       color: #cbd5e1;
       font-family: inherit;
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
@@ -172,82 +170,49 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
+    .tab-teacher-only {
+      display: none;
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      border: 1px solid #10b981;
+    }
+    .tab-teacher-only.active {
+      background: #10b981;
+      color: #ffffff;
+    }
+
     .view-section {
       display: none;
       flex-direction: column;
       gap: 14px;
     }
+    .view-section.active { display: flex; }
 
-    .view-section.active {
+    /* Фильтры */
+    .grade-filter {
       display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
     }
-
-    /* Панель добавления заданий для учителя */
-    .teacher-editor-card {
-      display: none;
-      background: rgba(6, 78, 59, 0.35);
-      border: 1.5px solid #059669;
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-      flex-direction: column;
-      gap: 12px;
-      backdrop-filter: blur(12px);
-    }
-
-    .teacher-editor-card h3 {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #34d399;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .form-row {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .form-row label {
-      font-size: 0.78rem;
-      font-weight: 700;
+    .grade-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       color: #cbd5e1;
-    }
-
-    .form-row input, .form-row textarea {
-      padding: 10px 12px;
-      border: 1px solid #334155;
-      border-radius: 10px;
-      background: #0f172a;
-      color: #ffffff;
-      font-family: inherit;
-      font-size: 0.88rem;
-      outline: none;
-      user-select: text;
-    }
-
-    .form-row input:focus, .form-row textarea:focus {
-      border-color: #10b981;
-    }
-
-    .btn-add-task {
-      padding: 12px;
-      background: #059669;
-      color: #ffffff;
-      border: none;
-      border-radius: 10px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      font-weight: 800;
+      font-size: 0.8rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: 0.2s;
     }
-    .btn-add-task:hover { background: #047857; }
+    .grade-btn.active {
+      background: #3b82f6;
+      color: #ffffff;
+      border-color: #3b82f6;
+    }
 
-    /* Карточки заданий */
-    .lab-card {
+    /* Карточки */
+    .card-item {
       background: rgba(255, 255, 255, 0.98);
       border-radius: 18px;
       padding: 18px;
@@ -255,39 +220,50 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      position: relative;
     }
 
-    .lab-header-row {
+    .card-header-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 8px;
     }
 
-    .lab-number {
-      font-size: 0.76rem;
+    .badge-grade-tag {
+      font-size: 0.72rem;
       font-weight: 800;
-      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: #e0f2fe;
+      color: #0369a1;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
     }
 
-    .lab-title {
+    .badge-hw-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: #fef3c7;
+      color: #b45309;
+      text-transform: uppercase;
+    }
+
+    .card-title {
       font-size: 1.1rem;
       font-weight: 800;
       color: var(--text);
-      margin-top: 2px;
+      margin-top: 4px;
     }
 
-    .lab-desc {
+    .card-desc {
       font-size: 0.86rem;
       color: var(--text-muted);
       line-height: 1.45;
       user-select: text;
     }
 
-    .lab-actions {
+    .card-actions {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
@@ -307,8 +283,8 @@
       font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
-      transition: 0.2s;
       text-decoration: none;
+      transition: 0.2s;
     }
     .btn-action-primary:hover { background: var(--primary-dark); }
 
@@ -325,304 +301,279 @@
       font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
-      transition: 0.2s;
       text-decoration: none;
+      transition: 0.2s;
     }
     .btn-action-doc:hover { background: #e2e8f0; }
 
-    .btn-delete-task {
+    .btn-delete-item {
       display: none;
       align-items: center;
       gap: 4px;
       padding: 8px 12px;
-      background: var(--danger-bg);
-      color: var(--danger);
+      background: #fee2e2;
+      color: #ef4444;
       border: 1px solid #fca5a5;
       border-radius: 10px;
       font-family: inherit;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
       margin-left: auto;
     }
-    .btn-delete-task:hover { background: #fee2e2; }
 
-    /* Тренажер Лабораторной №1 */
-    .sim-container {
+    /* Лабораторный бокс Releon */
+    .lab-box {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
 
-    .sim-top-bar {
-      display: flex;
-      justify-content: space-between;
+    .bench-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
+    }
+    @media (max-width: 680px) {
+      .bench-grid { grid-template-columns: 1fr; }
     }
 
-    .btn-instructions {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .chips-row {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 4px 2px;
-      scrollbar-width: thin;
-    }
-
-    .chip {
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #e2e8f0;
-      font-size: 0.82rem;
-      font-weight: 600;
-      backdrop-filter: blur(12px);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .chip.active {
-      background: #ffffff;
-      color: #0f172a;
-      border-color: #ffffff;
-      box-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-
-    .counter-card {
-      background: rgba(255, 255, 255, 0.98);
+    .visual-stand {
+      background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+      border: 1.5px solid var(--border);
       border-radius: 16px;
-      padding: 10px 14px;
+      padding: 16px;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-    }
-
-    .counter-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.88rem;
-      font-weight: 700;
-    }
-
-    .counter-left input {
-      width: 60px;
-      padding: 4px;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 800;
-      text-align: center;
-      outline: none;
-      user-select: text;
-    }
-
-    .btn-grid {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .btn-qty {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 7px 11px;
-      font-family: inherit;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--text);
-      cursor: pointer;
-    }
-    .btn-qty:hover { background: #e2e8f0; }
-
-    .btn-qty.clear {
-      background: var(--danger-bg);
-      color: var(--danger);
-      border-color: #fca5a5;
-    }
-
-    .canvas-wrapper {
+      gap: 12px;
       position: relative;
-      background: #ffffff;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
-    canvas {
-      display: block;
-      width: 100%;
-      height: 290px;
-      touch-action: none;
-      cursor: grab;
-    }
-    canvas:active { cursor: grabbing; }
-
-    .controls-bottom {
+    .beaker-container {
+      width: 140px;
+      height: 180px;
+      border: 3px solid #64748b;
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      background: rgba(255, 255, 255, 0.4);
       display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 8px 12px;
-      background: #f8fafc;
-      border-top: 1px solid var(--border);
-      flex-wrap: wrap;
+      align-items: flex-end;
+      overflow: hidden;
     }
 
-    .btn-ctrl {
-      flex: 1;
-      min-width: 110px;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      padding: 8px 6px;
+    .water-fill {
+      width: 100%;
+      height: 75%;
+      background: linear-gradient(180deg, rgba(56, 189, 248, 0.45), rgba(14, 165, 233, 0.75));
+      transition: background 0.4s;
+    }
+
+    .thermometer-tube {
+      position: absolute;
+      left: 30px;
+      bottom: 12px;
+      width: 16px;
+      height: 200px;
+      background: rgba(255,255,255,0.9);
+      border: 1.5px solid #475569;
       border-radius: 8px;
-      font-family: inherit;
-      font-size: 0.78rem;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .thermo-bulb {
+      width: 22px;
+      height: 22px;
+      background: #ef4444;
+      border-radius: 50%;
+      border: 1.5px solid #475569;
+      position: absolute;
+      bottom: -6px;
+      z-index: 6;
+    }
+
+    .thermo-liquid {
+      width: 6px;
+      background: #ef4444;
+      border-radius: 3px 3px 0 0;
+      transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-bottom: 8px;
+    }
+
+    .thermo-scale {
+      position: absolute;
+      right: -32px;
+      top: 15px;
+      height: 150px;
+      font-size: 0.65rem;
       font-weight: 700;
       color: #334155;
-      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .releon-probe {
+      position: absolute;
+      right: 32px;
+      bottom: 20px;
+      width: 8px;
+      height: 180px;
+      background: linear-gradient(90deg, #94a3b8, #cbd5e1, #64748b);
+      border-radius: 4px;
+      z-index: 5;
+    }
+    .releon-cable {
+      position: absolute;
+      right: 34px;
+      top: -30px;
+      width: 4px;
+      height: 40px;
+      background: #0284c7;
+      border-radius: 2px;
+    }
+
+    .releon-unit {
+      background: #0f172a;
+      border: 2px solid #0284c7;
+      border-radius: 14px;
+      padding: 14px;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 8px 20px rgba(2, 132, 199, 0.25);
+    }
+
+    .releon-screen {
+      background: #022c43;
+      border: 1px solid #0369a1;
+      border-radius: 8px;
+      padding: 12px;
       text-align: center;
     }
-    .btn-ctrl:hover { background: #f1f5f9; }
 
-    .calc-card {
-      background: rgba(255, 255, 255, 0.98);
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    .releon-brand {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #38bdf8;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .releon-digits {
+      font-family: monospace;
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #f0fdf4;
+      margin-top: 4px;
+    }
+
+    .temp-control-card {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-
-    .calc-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
       gap: 8px;
+      width: 100%;
     }
-
-    .calc-title {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--text);
-    }
-
-    .unit-switch-box {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .unit-toggle {
-      display: inline-flex;
-      background: #e2e8f0;
-      padding: 3px;
-      border-radius: 8px;
-    }
-
-    .unit-btn {
-      border: none;
-      background: transparent;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-muted);
+    .temp-control-card input[type=range] {
+      width: 100%;
+      accent-color: #2563eb;
       cursor: pointer;
     }
 
-    .unit-btn.active {
-      background: #ffffff;
-      color: var(--primary);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .fields-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 10px;
-    }
-
-    .field-item {
+    .btn-water-presets {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      gap: 6px;
+      flex-wrap: wrap;
     }
-
-    .field-item label {
-      font-size: 0.78rem;
+    .btn-water-preset {
+      flex: 1;
+      min-width: 80px;
+      padding: 6px 8px;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.75rem;
       font-weight: 700;
-      color: var(--text);
+      cursor: pointer;
     }
 
-    .field-item .formula {
-      font-size: 0.7rem;
-      color: var(--text-muted);
+    /* Таблица 5 замеров */
+    .research-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 0.82rem;
+      margin-top: 8px;
     }
-
-    .field-item input {
-      padding: 9px 10px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      background: var(--surface-subtle);
-      font-size: 0.95rem;
+    .research-table th {
+      background: #f8fafc;
+      padding: 8px 6px;
+      border: 1px solid var(--border);
+      color: #334155;
+      font-weight: 700;
+    }
+    .research-table td {
+      padding: 6px;
+      border: 1px solid var(--border);
+    }
+    .research-table input {
+      width: 100%;
+      padding: 6px 4px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.85rem;
       font-weight: 700;
       outline: none;
       user-select: text;
     }
 
-    .field-item input.correct {
-      border-color: var(--success);
+    .student-submit-card {
       background: #f0fdf4;
-      color: var(--success);
+      border: 1.5px solid #86efac;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
     }
 
-    .field-item input.incorrect {
-      border-color: var(--danger);
-      background: #fef2f2;
-      color: var(--danger);
+    .student-fields-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 540px) {
+      .student-fields-grid { grid-template-columns: 1fr; }
     }
 
-    .btn-verify {
-      width: 100%;
-      padding: 12px;
-      background: var(--primary);
+    .student-fields-grid input, textarea {
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      outline: none;
+      user-select: text;
+    }
+
+    .btn-send-teacher {
+      padding: 14px;
+      background: #16a34a;
       color: #ffffff;
       border: none;
       border-radius: 12px;
@@ -630,269 +581,407 @@
       font-size: 0.95rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+      transition: 0.2s;
     }
-    .btn-verify:hover { background: var(--primary-dark); }
+    .btn-send-teacher:hover { background: #15803d; }
 
-    .status-msg {
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-align: center;
-      min-height: 20px;
-    }
-
-    /* Модальное окно */
-    .modal-backdrop {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(6px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 100;
-    }
-
-    .modal-box {
-      background: #ffffff;
+    /* Формы создания */
+    .creator-box {
+      background: rgba(255, 255, 255, 0.98);
       border-radius: 20px;
-      max-width: 620px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      padding: 24px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      gap: 16px;
     }
 
-    .modal-header {
+    .form-group {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    .modal-title {
-      font-size: 1.1rem;
+    .form-group label {
+      font-size: 0.82rem;
       font-weight: 800;
-      color: var(--text);
+      color: #1e293b;
     }
 
-    .btn-close {
-      background: transparent;
-      border: none;
-      font-size: 1.4rem;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .modal-body {
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
       font-size: 0.88rem;
-      line-height: 1.55;
-      color: #334155;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      outline: none;
       user-select: text;
     }
 
-    .modal-section-title {
-      font-weight: 700;
-      color: var(--primary);
+    .questions-builder {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
+
+    .q-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .q-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      align-self: flex-start;
+    }
+    .q-badge.choice { background: #e0f2fe; color: #0284c7; }
+    .q-badge.input { background: #fef3c7; color: #b45309; }
+
+    .btn-add-q {
+      padding: 8px 12px;
+      background: #e2e8f0;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .btn-create-publish {
+      padding: 14px;
+      background: var(--teacher-accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+    }
+
+    .btn-publish-hw {
+      padding: 14px;
+      background: var(--hw-accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
+    }
+
+    /* Интерактивные вопросы для ученика */
+    .q-student-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .choice-buttons-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .btn-choice-opt {
+      padding: 8px 14px;
+      background: #f8fafc;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-choice-opt.selected {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+
+    /* Журнал сданных работ */
+    .submission-card {
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .submission-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 6px;
+    }
+    .submission-name { font-size: 1rem; font-weight: 800; color: #0f172a; }
+    .submission-time { font-size: 0.76rem; color: #94a3b8; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Верхняя панель -->
+  <!-- Верхняя строка -->
   <div class="top-header">
-    <div class="badge-class">7 Класс • Физика</div>
+    <div class="badge-class">Физика 7–11 класс • Лабораторный комплекс</div>
     <div class="teacher-badge-box">
       <button class="btn-teacher-auth" id="btnOpenTeacherLogin">🔐 Вход для учителя</button>
       <div class="teacher-logged-pill" id="teacherLoggedPill">
         <span>👩‍🏫 Евгения Васильевна</span>
-        <button class="btn-logout-teacher" id="btnLogoutTeacher" title="Выйти из режима учителя">выйти</button>
+        <button class="btn-logout-teacher" id="btnLogoutTeacher">выйти</button>
       </div>
     </div>
   </div>
 
   <header>
-    <h1>Лабораторные работы по физике</h1>
-    <div class="subtitle">Интерактивные тренажёры и бланки оформления работ</div>
+    <h1>Цифровой кабинет физики</h1>
+    <div class="subtitle">Интерактивные тренажёры, тесты с выбором ответа и домашние задания</div>
   </header>
 
-  <!-- Навигация -->
+  <!-- Навигация: раздельные вкладки -->
   <div class="tabs-nav">
-    <button class="tab-btn active" id="tabCatalog">📚 Каталог заданий</button>
-    <button class="tab-btn" id="tabSimulator">🔬 Тренажёр: Работа №1 (Метод рядов)</button>
+    <button class="tab-btn active" id="tabCatalog">🔬 Тренажёры и исследования</button>
+    <button class="tab-btn" id="tabHwCatalog">📖 Домашние задания</button>
+    <button class="tab-btn" id="tabReleonMain">🌡️ Стенд Releon №1</button>
+    <button class="tab-btn tab-teacher-only" id="tabCreateSim">🛠️ Создать тренажёр</button>
+    <button class="tab-btn tab-teacher-only" id="tabCreateHw">📝 Добавить ДЗ</button>
+    <button class="tab-btn tab-teacher-only" id="tabSubmissions">📥 Сданные работы (<span id="submissionsCount">0</span>)</button>
   </div>
 
-  <!-- РАЗДЕЛ 1: Каталог заданий -->
+  <!-- РАЗДЕЛ 1: КАТАЛОГ ТРЕНАЖЁРОВ (7-11 КЛАСС) -->
   <div class="view-section active" id="sectionCatalog">
-    
-    <!-- Панель учителя для добавления нового задания -->
-    <div class="teacher-editor-card" id="teacherEditorCard">
-      <h3>
-        <span>➕ Добавить новое задание по физике</span>
-        <button class="btn-qty clear" id="btnResetDefaultTasks" title="Восстановить исходные работы">Сброс к исходным</button>
-      </h3>
-      <div class="form-row">
-        <label>Название лабораторной / темы:</label>
-        <input type="text" id="newTaskTitle" placeholder="например: Лабораторная работа №6. Выяснение условий равновесия рычага">
-      </div>
-      <div class="form-row">
-        <label>Описание задания, цели и задачи:</label>
-        <textarea id="newTaskDesc" rows="2" placeholder="Укажите цели, требуемые расчеты и правила оформления..."></textarea>
-      </div>
-      <div class="form-row">
-        <label>Ссылка на файл оформления (Word, Яндекс.Диск, Google Документ):</label>
-        <input type="text" id="newTaskLink" placeholder="https://disk.yandex.ru/... или ссылка на документ">
-      </div>
-      <button class="btn-add-task" id="btnSaveNewTask">Опубликовать задание для всех учеников</button>
+    <div class="grade-filter">
+      <button class="grade-btn active" data-grade="all">Все классы</button>
+      <button class="grade-btn" data-grade="7">7 класс</button>
+      <button class="grade-btn" data-grade="8">8 класс</button>
+      <button class="grade-btn" data-grade="9">9 класс</button>
+      <button class="grade-btn" data-grade="10">10 класс</button>
+      <button class="grade-btn" data-grade="11">11 класс</button>
     </div>
-
-    <!-- Список заданий (загружается из Firebase) -->
-    <div id="tasksContainer" style="display:flex; flex-direction:column; gap:12px;">
-      <div style="background:#fff; border-radius:14px; padding:20px; text-align:center; color:#64748b; font-weight:600;">
-        ⏳ Загрузка заданий из базы данных...
-      </div>
-    </div>
-
+    <div id="simulatorsList" style="display:flex; flex-direction:column; gap:12px;"></div>
   </div>
 
-  <!-- РАЗДЕЛ 2: Тренажер Лабораторной №1 -->
-  <div class="view-section" id="sectionSimulator">
-    <div class="sim-container">
-      <div class="sim-top-bar">
-        <span style="color:#fff; font-weight:700; font-size:0.9rem;">Выберите крупу для опыта:</span>
-        <div style="display:flex; gap:8px;">
-          <button class="btn-instructions" id="btnOpenModal">📖 Инструкция и цели</button>
-          <button class="btn-instructions" onclick="downloadDoc1()">📄 Скачать .doc</button>
-        </div>
-      </div>
+  <!-- РАЗДЕЛ 2: ОТДЕЛЬНАЯ ВКЛАДКА ДОМАШНИХ ЗАДАНИЙ -->
+  <div class="view-section" id="sectionHwCatalog">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2 style="color:#ffffff; font-size:1.15rem;">Домашние задания и файлы от учителя</h2>
+    </div>
+    <div id="hwList" style="display:flex; flex-direction:column; gap:12px;"></div>
+  </div>
 
-      <div class="chips-row">
-        <button class="chip active" data-type="pea">
-          <span class="dot" style="background: radial-gradient(circle at 35% 35%, #bef264, #4d7c0f);"></span>Горох (~5.2 мм)
-        </button>
-        <button class="chip" data-type="buckwheat">
-          <span class="dot" style="background: radial-gradient(circle at 35% 35%, #b45309, #451a03);"></span>Гречка (~3.4 мм)
-        </button>
-        <button class="chip" data-type="millet">
-          <span class="dot" style="background: radial-gradient(circle at 35% 35%, #fde047, #ca8a04);"></span>Пшено (~1.8 мм)
-        </button>
-        <button class="chip" data-type="rice">
-          <span class="dot" style="background: radial-gradient(circle at 35% 35%, #ffffff, #94a3b8);"></span>Рис (~2.4 мм)
-        </button>
-        <button class="chip" data-type="lentil">
-          <span class="dot" style="background: radial-gradient(circle at 35% 35%, #fb923c, #9a3412);"></span>Чечевица (~4.6 мм)
-        </button>
-      </div>
-
-      <div class="counter-card">
-        <div class="counter-left">
-          <span>Число крупинок (N):</span>
-          <input type="number" id="directInputN" min="1" max="5000" value="10">
-          <span style="color:var(--text-muted); font-size:0.8rem;">шт</span>
+  <!-- РАЗДЕЛ 3: СТЕНД RELEON + ТЕРМОМЕТР И ТАБЛИЦА -->
+  <div class="view-section" id="sectionReleon">
+    <div class="lab-box">
+      <div class="bench-grid">
+        <div class="visual-stand">
+          <div style="font-size:0.8rem; font-weight:700; color:#475569;">Сосуд с исследуемой водой</div>
+          <div class="beaker-container">
+            <div class="water-fill" id="waterGraphic"></div>
+            <div class="thermometer-tube" title="Жидкостный спиртовой термометр">
+              <div class="thermo-liquid" id="thermoLiquid"></div>
+              <div class="thermo-bulb"></div>
+              <div class="thermo-scale">
+                <span>100°</span><span>80°</span><span>60°</span><span>40°</span><span>20°</span><span>0°C</span>
+              </div>
+            </div>
+            <div class="releon-cable"></div>
+            <div class="releon-probe" title="Щуп датчика температуры Releon"></div>
+          </div>
+          <div style="font-size:0.75rem; color:#64748b; text-align:center;">
+            Слева: <b>Спиртовой термометр</b> • Справа: <b>Щуп Releon</b>
+          </div>
         </div>
-        <div class="btn-grid">
-          <button class="btn-qty" id="btnSub10">-10</button>
-          <button class="btn-qty" id="btnSub1">-1</button>
-          <button class="btn-qty" id="btnAdd1">+1</button>
-          <button class="btn-qty" id="btnAdd5">+5</button>
-          <button class="btn-qty" id="btnAdd10">+10</button>
-          <button class="btn-qty clear" id="btnReset">Сброс</button>
-        </div>
-      </div>
 
-      <div class="canvas-wrapper">
-        <canvas id="labCanvas"></canvas>
-        <div class="controls-bottom">
-          <button class="btn-ctrl" id="btnGoStart">В начало (0 см)</button>
-          <button class="btn-ctrl" id="btnGoEnd">В конец ряда</button>
-          <button class="btn-ctrl" id="btnAlignZero">Ноль к началу ряда</button>
-        </div>
-      </div>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div class="releon-unit">
+            <div class="releon-brand">Releon Point • Цифровая лаборатория</div>
+            <div class="releon-screen">
+              <div style="font-size:0.75rem; color:#94a3b8;">ДАТЧИК ТЕМПЕРАТУРЫ (°C)</div>
+              <div class="releon-digits" id="releonScreenVal">22.4 °C</div>
+            </div>
+            <div style="font-size:0.74rem; color:#bae6fd;">Статус: замер в реальном времени активен</div>
+          </div>
 
-      <div class="calc-card">
-        <div class="calc-header">
-          <span class="calc-title">Таблица измерений и вычислений</span>
-          <div class="unit-switch-box">
-            <span>Считать в:</span>
-            <div class="unit-toggle">
-              <button class="unit-btn active" id="btnUnitCM">см</button>
-              <button class="unit-btn" id="btnUnitMM">мм</button>
+          <div class="temp-control-card">
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
+              <span>Температура воды в сосуде:</span>
+              <span id="labelSliderTemp" style="color:var(--primary);">22.0 °C</span>
+            </div>
+            <input type="range" id="sliderTemp" min="5" max="95" step="0.5" value="22">
+            
+            <div class="btn-water-presets">
+              <button class="btn-water-preset" onclick="setTempPreset(10)">❄️ Холодная (10°)</button>
+              <button class="btn-water-preset" onclick="setTempPreset(23)">Комнатная (23°)</button>
+              <button class="btn-water-preset" onclick="setTempPreset(55)">Горячая (55°)</button>
+              <button class="btn-water-preset" onclick="setTempPreset(85)">🔥 Кипяток (85°)</button>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="fields-grid">
-          <div class="field-item">
-            <label id="lblL">1. Длина ряда L (см)</label>
-            <span class="formula">по шкале линейки</span>
-            <input type="number" step="any" inputmode="decimal" id="inL" placeholder="например, 5.2">
-          </div>
-          <div class="field-item">
-            <label>2. Число зёрен N (шт)</label>
-            <span class="formula">количество в ряду</span>
-            <input type="number" inputmode="numeric" id="inN" placeholder="10">
-          </div>
-          <div class="field-item">
-            <label id="lblD">3. Размер зерна d (см)</label>
-            <span class="formula">формула: L ÷ N</span>
-            <input type="number" step="any" inputmode="decimal" id="inD" placeholder="L ÷ N">
-          </div>
-          <div class="field-item">
-            <label id="lblErr">4. Погрешность Δd (см)</label>
-            <span class="formula" id="lblErrFormula">формула: 0.1 см ÷ N</span>
-            <input type="number" step="any" inputmode="decimal" id="inErr" placeholder="0.1 ÷ N">
-          </div>
+      <!-- Таблица 5 измерений (кнопка автозаписи убрана) -->
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+          <h3 style="font-size:0.95rem; font-weight:800; color:#0f172a;">Таблица исследования: Сравнение показаний</h3>
+          <span style="font-size:0.78rem; color:#64748b;">Снимите показания приборов и внесите в ячейки вручную</span>
         </div>
 
-        <button class="btn-verify" id="btnCheck">Проверить результат</button>
-        <div class="status-msg" id="statusMsg"></div>
+        <div style="overflow-x:auto;">
+          <table class="research-table">
+            <thead>
+              <tr>
+                <th style="width:160px;">Показания температуры</th>
+                <th>1-е измерение</th><th>2-е измерение</th><th>3-е измерение</th><th>4-е измерение</th><th>5-е измерение</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight:700; text-align:left; background:#fff7ed; color:#c2410c;">Жидкостный термометр (°C)</td>
+                <td><input type="text" id="cell_thermo_0" placeholder="°C"></td>
+                <td><input type="text" id="cell_thermo_1" placeholder="°C"></td>
+                <td><input type="text" id="cell_thermo_2" placeholder="°C"></td>
+                <td><input type="text" id="cell_thermo_3" placeholder="°C"></td>
+                <td><input type="text" id="cell_thermo_4" placeholder="°C"></td>
+              </tr>
+              <tr>
+                <td style="font-weight:700; text-align:left; background:#f0f9ff; color:#0369a1;">Температурный датчик Releon (°C)</td>
+                <td><input type="text" id="cell_releon_0" placeholder="°C"></td>
+                <td><input type="text" id="cell_releon_1" placeholder="°C"></td>
+                <td><input type="text" id="cell_releon_2" placeholder="°C"></td>
+                <td><input type="text" id="cell_releon_3" placeholder="°C"></td>
+                <td><input type="text" id="cell_releon_4" placeholder="°C"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<!-- Модальное окно инструкции -->
-<div class="modal-backdrop" id="modalDoc">
-  <div class="modal-box">
-    <div class="modal-header">
-      <span class="modal-title">Лабораторная работа №1</span>
-      <button class="btn-close" id="btnCloseModal">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-title">Тема:</div>
-        <div>Определение размеров малых тел методом рядов.</div>
-      </div>
-      <div>
-        <div class="modal-section-title">Цель работы:</div>
-        <div>Научиться определять линейные размеры малых тел (круп и семян), размеры которых невозможно измерить непосредственно обычной линейкой.</div>
-      </div>
-      <div>
-        <div class="modal-section-title">Оборудование:</div>
-        <div>Измерительная линейка с миллиметровыми делениями, набор сыпучих кухонных тел (горох, гречка, пшено, рис, чечевица).</div>
-      </div>
-      <div>
-        <div class="modal-section-title">Теоретическое обоснование:</div>
-        <div>Если уложить вплотную в ряд $N$ одинаковых крупинок и измерить длину ряда $L$, средний диаметр одной крупинки равен: <b>$d = L / N$</b>. Погрешность измерения одного тела уменьшается в $N$ раз: <b>$\Delta d = \Delta L / N$</b>, где $\Delta L$ — цена деления линейки (1 мм или 0.1 см).</div>
+      <!-- Отправка учителю -->
+      <div class="student-submit-card">
+        <div style="font-size:0.95rem; font-weight:800; color:#166534;">
+          📤 Отправка результатов Евгении Васильевне
+        </div>
+        <div class="student-fields-grid">
+          <input type="text" id="studentFio" placeholder="Ваша Фамилия и Имя (например: Иванов Иван)">
+          <input type="text" id="studentClass" placeholder="Класс (например: 7 А)" value="7 А">
+        </div>
+        <textarea id="studentConclusion" rows="2" placeholder="Вывод: совпала ли гипотеза? Одинаковы ли показания спиртового термометра и цифрового датчика Releon в одинаковых условиях?"></textarea>
+        <button class="btn-send-teacher" id="btnSubmitToTeacher">
+          🚀 Отправить проверенную работу учителю в Firebase
+        </button>
+        <div id="submitStatusMsg" style="font-size:0.85rem; text-align:center; font-weight:700;"></div>
       </div>
     </div>
   </div>
+
+  <!-- РАЗДЕЛ 4: КОНСТРУКТОР ТРЕНАЖЁРОВ (2 ТИПА ВОПРОСОВ) -->
+  <div class="view-section" id="sectionCreateSim">
+    <div class="creator-box">
+      <h2 style="font-size:1.15rem; color:#0f172a;">🛠️ Конструктор нового тренажёра</h2>
+      <div class="form-group">
+        <label>Для какого класса:</label>
+        <select id="newSimGrade">
+          <option value="7">7 класс</option>
+          <option value="8">8 класс</option>
+          <option value="9">9 класс</option>
+          <option value="10">10 класс</option>
+          <option value="11">11 класс</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Название / тема тренажёра:</label>
+        <input type="text" id="newSimTitle" placeholder="например: Исследование тепловых явлений">
+      </div>
+      <div class="form-group">
+        <label>Цель и методические указания:</label>
+        <textarea id="newSimDesc" rows="2" placeholder="Опишите, что именно нужно исследовать ученикам..."></textarea>
+      </div>
+      
+      <!-- Блок с вопросами -->
+      <div class="form-group">
+        <label>Контрольные вопросы к уроку:</label>
+        <div class="questions-builder" id="questionsContainer"></div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;">
+          <button class="btn-add-q" id="btnAddChoiceQ" style="background:#e0f2fe; color:#0284c7;">+ Вопрос с выбором ответа (нажать)</button>
+          <button class="btn-add-q" id="btnAddInputQ" style="background:#fef3c7; color:#b45309;">+ Вопрос со вводом текста (написать)</button>
+        </div>
+      </div>
+
+      <button class="btn-create-publish" id="btnPublishSimulator">🚀 Опубликовать тренажёр в Firebase</button>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 5: КОНСТРУКТОР ДОМАШНИХ ЗАДАНИЙ -->
+  <div class="view-section" id="sectionCreateHw">
+    <div class="creator-box" style="border-top: 4px solid var(--hw-accent);">
+      <h2 style="font-size:1.15rem; color:#0f172a;">📝 Публикация домашнего задания</h2>
+      <div class="form-group">
+        <label>Класс:</label>
+        <select id="newHwGrade">
+          <option value="7">7 класс</option>
+          <option value="8">8 класс</option>
+          <option value="9">9 класс</option>
+          <option value="10">10 класс</option>
+          <option value="11">11 класс</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Тема домашнего задания:</label>
+        <input type="text" id="newHwTitle" placeholder="например: ДЗ к параграфу 12. Плотность вещества">
+      </div>
+      <div class="form-group">
+        <label>Задание, номера упражнений и параграфы:</label>
+        <textarea id="newHwDesc" rows="3" placeholder="Прочитать §12, выписать формулы, решить упражнение 8 №1-3..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>🔗 Ссылка на файл ДЗ (Word .doc/.docx, Яндекс.Диск, Google Диск):</label>
+        <input type="text" id="newHwLink" placeholder="https://disk.yandex.ru/... или ссылка на документ">
+      </div>
+      <button class="btn-publish-hw" id="btnPublishHw">📤 Опубликовать домашнее задание для класса</button>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 6: ЖУРНАЛ СДАННЫХ РАБОТ ДЛЯ УЧИТЕЛЯ -->
+  <div class="view-section" id="sectionSubmissions">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2 style="color:#fff; font-size:1.15rem;">Журнал сданных работ (в реальном времени)</h2>
+      <button class="btn-water-preset" style="color:var(--danger); border-color:#fca5a5;" id="btnClearSubmissions">Очистить журнал</button>
+    </div>
+    <div id="submissionsContainer" style="display:flex; flex-direction:column; gap:12px;"></div>
+  </div>
+
+  <!-- РАЗДЕЛ 7: ЭКРАН ЗАПУЩЕННОГО ТРЕНАЖЁРА -->
+  <div class="view-section" id="sectionActiveSimulator">
+    <button class="btn-action-primary" id="btnBackToCatalog" style="align-self:flex-start; margin-bottom:4px;">⬅️ Назад к тренажёрам</button>
+    <div id="simulatorMountArea"></div>
+  </div>
+
 </div>
 
 <script>
-  /* ============================================================
-     ПОДКЛЮЧЕНИЕ FIREBASE REALTIME DATABASE
-  ============================================================ */
+  /* 1. FIREBASE */
   const firebaseConfig = {
     apiKey: "AIzaSyCrb0AZFDLZLcH2PkYTd3OxL7gKGTqnbWM",
     authDomain: "physics-7-lab.firebaseapp.com",
@@ -905,11 +994,11 @@
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
-  const tasksRef = db.ref('tasks_7th_grade');
+  const customSimsRef = db.ref('custom_simulators');
+  const homeworksRef = db.ref('class_homeworks');
+  const submissionsRef = db.ref('student_research_submissions');
 
-  /* ============================================================
-     СИСТЕМА КЛЮЧЕЙ И РЕЖИМ УЧИТЕЛЯ
-  ============================================================ */
+  /* 2. АВТОРИЗАЦИЯ УЧИТЕЛЯ */
   const TEACHER_KEYS = [
     "Evgeniya_Vasilievna#Phys2026!7A$MasterKey",
     "Kx9$vL#TeacherPhys_School14^Qz82",
@@ -923,32 +1012,38 @@
   const btnOpenTeacherLogin = document.getElementById('btnOpenTeacherLogin');
   const teacherLoggedPill = document.getElementById('teacherLoggedPill');
   const btnLogoutTeacher = document.getElementById('btnLogoutTeacher');
-  const teacherEditorCard = document.getElementById('teacherEditorCard');
+  const tabCreateSim = document.getElementById('tabCreateSim');
+  const tabCreateHw = document.getElementById('tabCreateHw');
+  const tabSubmissions = document.getElementById('tabSubmissions');
 
   function updateTeacherUI() {
     if (isTeacherMode) {
       btnOpenTeacherLogin.style.display = 'none';
       teacherLoggedPill.style.display = 'inline-flex';
-      teacherEditorCard.style.display = 'flex';
+      tabCreateSim.style.display = 'inline-block';
+      tabCreateHw.style.display = 'inline-block';
+      tabSubmissions.style.display = 'inline-block';
     } else {
       btnOpenTeacherLogin.style.display = 'inline-flex';
       teacherLoggedPill.style.display = 'none';
-      teacherEditorCard.style.display = 'none';
+      tabCreateSim.style.display = 'none';
+      tabCreateHw.style.display = 'none';
+      tabSubmissions.style.display = 'none';
     }
-    renderTasks();
+    renderCatalog();
+    renderHomeworks();
   }
 
   btnOpenTeacherLogin.onclick = () => {
     const inputKey = prompt("Введите секретный ключ учителя физики на английском языке:");
     if (!inputKey) return;
-
     if (TEACHER_KEYS.includes(inputKey.trim())) {
       isTeacherMode = true;
       localStorage.setItem('phys_teacher_active', 'true');
-      alert("Доступ подтверждён! Режим управления заданиями активирован.");
+      alert("Здравствуйте, Евгения Васильевна! Доступ к управлению тренажёрами, ДЗ и журналу открыт.");
       updateTeacherUI();
     } else {
-      alert("Ошибка: неверный ключ доступа!");
+      alert("Ошибка: неверный ключ!");
     }
   };
 
@@ -956,594 +1051,574 @@
     isTeacherMode = false;
     localStorage.removeItem('phys_teacher_active');
     updateTeacherUI();
+    document.getElementById('tabCatalog').click();
   };
 
-  /* ============================================================
-     ИСХОДНЫЕ ЗАДАНИЯ ПО УМОЛЧАНИЮ
-  ============================================================ */
-  const INITIAL_TASKS = [
+  /* 3. ДВИЖОК RELEON + ТЕРМОМЕТР */
+  const sliderTemp = document.getElementById('sliderTemp');
+  const labelSliderTemp = document.getElementById('labelSliderTemp');
+  const thermoLiquid = document.getElementById('thermoLiquid');
+  const releonScreenVal = document.getElementById('releonScreenVal');
+  const waterGraphic = document.getElementById('waterGraphic');
+
+  function updateSimulation() {
+    const temp = parseFloat(sliderTemp.value);
+    labelSliderTemp.innerText = temp.toFixed(1) + ' °C';
+
+    const heightPx = Math.max(6, Math.min(160, (temp / 100) * 155 + 8));
+    thermoLiquid.style.height = heightPx + 'px';
+
+    const noise = (Math.sin(Date.now() / 1400) * 0.25);
+    const releonVal = (temp + noise).toFixed(1);
+    releonScreenVal.innerText = releonVal + ' °C';
+
+    if (temp < 20) {
+      waterGraphic.style.background = 'linear-gradient(180deg, rgba(56, 189, 248, 0.6), rgba(2, 132, 199, 0.8))';
+    } else if (temp > 60) {
+      waterGraphic.style.background = 'linear-gradient(180deg, rgba(251, 146, 60, 0.5), rgba(239, 68, 68, 0.7))';
+    } else {
+      waterGraphic.style.background = 'linear-gradient(180deg, rgba(56, 189, 248, 0.45), rgba(14, 165, 233, 0.75))';
+    }
+  }
+
+  sliderTemp.oninput = updateSimulation;
+  setInterval(updateSimulation, 800);
+
+  function setTempPreset(val) {
+    sliderTemp.value = val;
+    updateSimulation();
+  }
+
+  /* 4. ОТПРАВКА В FIREBASE */
+  document.getElementById('btnSubmitToTeacher').onclick = () => {
+    const fio = document.getElementById('studentFio').value.trim();
+    const sClass = document.getElementById('studentClass').value.trim();
+    const conclusion = document.getElementById('studentConclusion').value.trim();
+
+    if (!fio) {
+      alert("Пожалуйста, введите Фамилию и Имя!");
+      return;
+    }
+
+    const thermoReadings = [];
+    const releonReadings = [];
+    for (let i = 0; i < 5; i++) {
+      thermoReadings.push(document.getElementById(`cell_thermo_${i}`).value || '—');
+      releonReadings.push(document.getElementById(`cell_releon_${i}`).value || '—');
+    }
+
+    const submissionData = {
+      id: "sub_" + Date.now(),
+      fio: fio,
+      sClass: sClass || "7 класс",
+      thermo: thermoReadings,
+      releon: releonReadings,
+      conclusion: conclusion || "Показания жидкостного термометра и цифровой лаборатории Releon в пределах погрешности одинаковы.",
+      timestamp: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+    };
+
+    const statusMsg = document.getElementById('submitStatusMsg');
+    statusMsg.innerHTML = '<span style="color:#0369a1;">Отправка в облако Firebase...</span>';
+
+    submissionsRef.push(submissionData).then(() => {
+      statusMsg.innerHTML = '<span style="color:var(--success);">✓ Отчёт успешно передан Евгении Васильевне!</span>';
+      alert(`Отлично, ${fio}! Твоя работа отправлена учителю.`);
+    }).catch(err => {
+      statusMsg.innerHTML = `<span style="color:var(--danger);">Ошибка: ${err.message}</span>`;
+    });
+  };
+
+  /* 5. КОНСТРУКТОР ТРЕНАЖЁРОВ (2 ТИПА ВОПРОСОВ) */
+  const questionsContainer = document.getElementById('questionsContainer');
+
+  // Добавление вопроса с выбором ответа
+  document.getElementById('btnAddChoiceQ').onclick = () => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'q-item';
+    qDiv.dataset.type = 'choice';
+    qDiv.innerHTML = `
+      <span class="q-badge choice">Выбор ответа (кнопка)</span>
+      <input type="text" class="q-text" placeholder="Текст вопроса...">
+      <input type="text" class="q-options" placeholder="Варианты ответов через запятую или точку с запятой (напр: Да; Нет; Не знаю)...">
+      <input type="text" class="q-answer" placeholder="Точный правильный вариант (как в списке)...">
+      <button type="button" class="btn-water-preset" style="color:var(--danger); border-color:#fca5a5; align-self:flex-start;" onclick="this.parentElement.remove()">Удалить вопрос</button>
+    `;
+    questionsContainer.appendChild(qDiv);
+  };
+
+  // Добавление вопроса со вводом текста
+  document.getElementById('btnAddInputQ').onclick = () => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'q-item';
+    qDiv.dataset.type = 'input';
+    qDiv.innerHTML = `
+      <span class="q-badge input">Ввод текста / числа</span>
+      <input type="text" class="q-text" placeholder="Текст вопроса...">
+      <input type="text" class="q-answer" placeholder="Правильный ответ (число или слово)...">
+      <button type="button" class="btn-water-preset" style="color:var(--danger); border-color:#fca5a5; align-self:flex-start;" onclick="this.parentElement.remove()">Удалить вопрос</button>
+    `;
+    questionsContainer.appendChild(qDiv);
+  };
+
+  document.getElementById('btnPublishSimulator').onclick = () => {
+    const grade = document.getElementById('newSimGrade').value;
+    const title = document.getElementById('newSimTitle').value.trim();
+    const desc = document.getElementById('newSimDesc').value.trim();
+
+    if (!title) {
+      alert("Пожалуйста, введите название тренажёра!");
+      return;
+    }
+
+    const questions = [];
+    document.querySelectorAll('.q-item').forEach(item => {
+      const type = item.dataset.type;
+      const q = item.querySelector('.q-text').value.trim();
+      const a = item.querySelector('.q-answer').value.trim();
+
+      if (type === 'choice') {
+        const rawOpts = item.querySelector('.q-options').value;
+        const options = rawOpts.split(/[,;]+/).map(s => s.trim()).filter(Boolean);
+        if (q && a && options.length > 0) {
+          questions.push({ type: 'choice', q, a, options });
+        }
+      } else {
+        if (q && a) {
+          questions.push({ type: 'input', q, a });
+        }
+      }
+    });
+
+    const newSim = {
+      id: "custom_sim_" + Date.now(),
+      grade: grade,
+      title: title,
+      desc: desc || "Интерактивная работа по физике.",
+      questions: questions
+    };
+
+    customSimsRef.push(newSim).then(() => {
+      alert("Тренажёр с вопросами успешно опубликован в Firebase!");
+      document.getElementById('newSimTitle').value = '';
+      document.getElementById('newSimDesc').value = '';
+      questionsContainer.innerHTML = '';
+      document.getElementById('tabCatalog').click();
+    });
+  };
+
+  window.deleteCustomSim = function(simId) {
+    if (confirm("Вы уверены, что хотите удалить этот тренажёр?")) {
+      customSimsRef.once('value', snapshot => {
+        snapshot.forEach(child => {
+          if (child.val().id === simId) {
+            child.ref.remove();
+          }
+        });
+      });
+    }
+  };
+
+  /* 6. КОНСТРУКТОР ДЗ */
+  document.getElementById('btnPublishHw').onclick = () => {
+    const grade = document.getElementById('newHwGrade').value;
+    const title = document.getElementById('newHwTitle').value.trim();
+    const desc = document.getElementById('newHwDesc').value.trim();
+    const link = document.getElementById('newHwLink').value.trim();
+
+    if (!title) {
+      alert("Введите тему домашнего задания!");
+      return;
+    }
+
+    const newHw = {
+      id: "hw_" + Date.now(),
+      grade: grade,
+      title: title,
+      desc: desc || "Домашнее задание к уроку.",
+      customLink: link || null,
+      date: new Date().toLocaleDateString('ru-RU')
+    };
+
+    homeworksRef.push(newHw).then(() => {
+      alert("Домашнее задание успешно опубликовано!");
+      document.getElementById('newHwTitle').value = '';
+      document.getElementById('newHwDesc').value = '';
+      document.getElementById('newHwLink').value = '';
+      document.getElementById('tabHwCatalog').click();
+    });
+  };
+
+  window.deleteHwItem = function(hwId) {
+    if (confirm("Удалить это домашнее задание?")) {
+      homeworksRef.once('value', snapshot => {
+        snapshot.forEach(child => {
+          if (child.val().id === hwId) {
+            child.ref.remove();
+          }
+        });
+      });
+    }
+  };
+
+  /* 7. КАТАЛОГ ТРЕНАЖЁРОВ */
+  const BUILTIN_SIMS = [
     {
-      id: "builtin-1",
-      num: 1,
-      title: "Определение размеров малых тел методом рядов",
-      desc: "Измерение диаметра мелких кухонных круп (горох, гречка, пшено, рис, чечевица) с помощью подвижной миллиметровой линейки и расчет погрешности.",
-      isSim: true,
-      docType: "lab1"
+      id: "sim-releon-base",
+      grade: "7",
+      title: "Урок-исследование №1: Жидкостный термометр и датчик Releon",
+      desc: "Сравнение показаний спиртового термометра и цифровой лаборатории Releon в одинаковых условиях[cite: 2].",
+      isNativeReleon: true
     },
     {
-      id: "builtin-2",
-      num: 2,
-      title: "Измерение массы тела на рычажных весах",
-      desc: "Ознакомление с правилами взвешивания, уравновешивание коромысла весов разновесами (гирьками) и точное определение массы твёрдых тел.",
-      isSim: false,
-      docType: "generic",
-      eq: "Рычажные весы, набор гирь (разновесов), исследуемые твёрдые тела."
-    },
-    {
-      id: "builtin-3",
-      num: 3,
-      title: "Измерение объема тела с помощью мензурки",
-      desc: "Определение цены деления измерительного цилиндра (мензурки) и экспериментальное измерение объема погруженного тела неправильной формы.",
-      isSim: false,
-      docType: "generic",
-      eq: "Измерительный цилиндр (мензурка), вода, твёрдое тело на нити."
-    },
-    {
-      id: "builtin-4",
-      num: 4,
-      title: "Определение плотности твёрдого тела",
-      desc: "Экспериментальное нахождение массы тела на весах, его объема мензуркой и расчет плотности вещества по формуле: ρ = m / V.",
-      isSim: false,
-      docType: "generic",
-      eq: "Весы с разновесами, измерительный цилиндр с водой, исследуемое твёрдое тело на нити."
-    },
-    {
-      id: "builtin-5",
-      num: 5,
-      title: "Градуирование пружины и измерение сил динамометром",
-      desc: "Построение шкалы динамометра с заданной ценой деления на основе закона Гука и измерение веса подвешиваемых грузов.",
-      isSim: false,
-      docType: "generic",
-      eq: "Динамометр со скрытой шкалой, набор грузов по 100 г, полоска бумаги, линейка."
+      id: "sim-rows-7",
+      grade: "7",
+      title: "Лабораторная работа: Метод рядов (размеры малых тел)",
+      desc: "Определение диаметра малых крупинок при помощи миллиметровой линейки и расчет погрешности.",
+      questions: [
+        { 
+          type: "choice", 
+          q: "Как изменяется погрешность измерения одного тела с ростом числа частиц N?", 
+          options: ["Увеличивается", "Уменьшается", "Не изменяется"], 
+          a: "Уменьшается" 
+        },
+        { 
+          type: "input", 
+          q: "Какова цена деления стандартной миллиметровой линейки в миллиметрах?", 
+          a: "1" 
+        }
+      ]
     }
   ];
 
-  let currentTasks = [];
+  let currentSimList = [];
+  let currentGradeFilter = "all";
 
-  // Синхронизация с базой данных в РЕАЛЬНОМ ВРЕМЕНИ
-  tasksRef.on('value', (snapshot) => {
+  customSimsRef.on('value', (snapshot) => {
     const data = snapshot.val();
-    if (!data) {
-      // Если база ещё пустая, заливаем в неё 5 стандартных работ
-      tasksRef.set(INITIAL_TASKS);
-      return;
+    let cloudSims = [];
+    if (data) {
+      cloudSims = Array.isArray(data) ? data.filter(Boolean) : Object.values(data);
     }
-    // Преобразуем данные в массив
-    if (Array.isArray(data)) {
-      currentTasks = data.filter(Boolean);
-    } else {
-      currentTasks = Object.values(data);
-    }
-    renderTasks();
+    currentSimList = [...BUILTIN_SIMS, ...cloudSims];
+    renderCatalog();
   });
 
-  function renderTasks() {
-    const container = document.getElementById('tasksContainer');
+  function renderCatalog() {
+    const container = document.getElementById('simulatorsList');
     container.innerHTML = '';
 
-    if (!currentTasks || currentTasks.length === 0) {
-      container.innerHTML = '<div style="background:#fff; border-radius:14px; padding:20px; text-align:center; color:#64748b; font-weight:600;">Список заданий пуст. Войдите как учитель, чтобы добавить новые работы или нажмите «Сброс к исходным».</div>';
+    const filtered = currentGradeFilter === 'all' 
+      ? currentSimList 
+      : currentSimList.filter(s => String(s.grade) === String(currentGradeFilter));
+
+    if (filtered.length === 0) {
+      container.innerHTML = '<div style="background:#fff; border-radius:14px; padding:20px; text-align:center; color:#64748b;">Тренажёров пока нет. Создайте первый во вкладке «Создать тренажёр»!</div>';
       return;
     }
 
-    currentTasks.forEach((task, index) => {
+    filtered.forEach(sim => {
       const card = document.createElement('div');
-      card.className = 'lab-card';
+      card.className = 'card-item';
 
-      let actionsHtml = '';
-      if (task.isSim) {
-        actionsHtml += `<button class="btn-action-primary" onclick="openLab1()">Запустить тренажёр</button>`;
-      }
-      if (task.docType === 'lab1') {
-        actionsHtml += `<button class="btn-action-doc" onclick="downloadDoc1()">📄 Скачать бланк отчёта (.doc)</button>`;
-      } else if (task.docType === 'generic') {
-        actionsHtml += `<button class="btn-action-doc" onclick="downloadDocGeneric(${task.num || index + 1}, '${task.title}', '${task.eq || ''}')">📄 Скачать бланк отчёта (.doc)</button>`;
-      } else if (task.customLink) {
-        actionsHtml += `<a class="btn-action-doc" href="${task.customLink}" target="_blank">🔗 Открыть файл учителя</a>`;
-      }
-
-      const deleteBtnHtml = isTeacherMode 
-        ? `<button class="btn-delete-task" style="display:inline-flex;" onclick="deleteTask('${task.id}')">🗑️ Удалить</button>` 
+      const deleteBtn = (isTeacherMode && !sim.id.startsWith("sim-")) 
+        ? `<button class="btn-delete-item" style="display:inline-flex;" onclick="deleteCustomSim('${sim.id}')">🗑️ Удалить</button>` 
         : '';
 
       card.innerHTML = `
-        <div class="lab-header-row">
+        <div class="card-header-row">
           <div>
-            <div class="lab-number">Задание №${index + 1}</div>
-            <div class="lab-title">${task.title}</div>
+            <span class="badge-grade-tag">${sim.grade} Класс</span>
+            <div class="card-title">${sim.title}</div>
           </div>
-          ${deleteBtnHtml}
+          ${deleteBtn}
         </div>
-        <div class="lab-desc">${task.desc}</div>
-        <div class="lab-actions">${actionsHtml}</div>
+        <div class="card-desc">${sim.desc}</div>
+        <div class="card-actions">
+          <button class="btn-action-primary" onclick="launchSimulator('${sim.id}')">▶️ Запустить тренажёр</button>
+        </div>
       `;
       container.appendChild(card);
     });
   }
 
-  // Добавление задания прямо в Firebase
-  document.getElementById('btnSaveNewTask').onclick = () => {
-    const title = document.getElementById('newTaskTitle').value.trim();
-    const desc = document.getElementById('newTaskDesc').value.trim();
-    const link = document.getElementById('newTaskLink').value.trim();
+  document.querySelectorAll('.grade-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentGradeFilter = btn.dataset.grade;
+      renderCatalog();
+    };
+  });
 
-    if (!title) {
-      alert("Пожалуйста, введите название лабораторной работы!");
+  /* 8. ОТОБРАЖЕНИЕ ДЗ */
+  let currentHwList = [];
+
+  homeworksRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      currentHwList = Array.isArray(data) ? data.filter(Boolean) : Object.values(data);
+    } else {
+      currentHwList = [
+        {
+          id: "hw_sample_7",
+          grade: "7",
+          title: "Домашнее задание: Измерение размеров малых тел",
+          desc: "Повторить метод рядов. В тетради выполнить расчёт диаметра крупинки по формуле d = L / N. Оформить вывод работы.",
+          customLink: null,
+          date: "Сегодня"
+        }
+      ];
+    }
+    renderHomeworks();
+  });
+
+  function renderHomeworks() {
+    const container = document.getElementById('hwList');
+    container.innerHTML = '';
+
+    if (currentHwList.length === 0) {
+      container.innerHTML = '<div style="background:#fff; border-radius:14px; padding:20px; text-align:center; color:#64748b;">Домашних заданий пока нет.</div>';
       return;
     }
 
-    const newTask = {
-      id: "custom-" + Date.now(),
-      num: currentTasks.length + 1,
-      title: title,
-      desc: desc || "Инструкция и методические указания к выполнению работы.",
-      isSim: false,
-      customLink: link || null
-    };
+    currentHwList.forEach(hw => {
+      const card = document.createElement('div');
+      card.className = 'card-item';
 
-    const updated = [...currentTasks, newTask];
-    tasksRef.set(updated).then(() => {
-      document.getElementById('newTaskTitle').value = '';
-      document.getElementById('newTaskDesc').value = '';
-      document.getElementById('newTaskLink').value = '';
-      alert("Задание мгновенно опубликовано для всего класса через Firebase!");
-    }).catch(err => {
-      alert("Ошибка записи в базу: " + err.message);
+      let docBtnHtml = '';
+      if (hw.customLink) {
+        docBtnHtml = `<a class="btn-action-doc" href="${hw.customLink}" target="_blank">📄 Открыть файл ДЗ / Word</a>`;
+      }
+
+      const deleteBtn = isTeacherMode 
+        ? `<button class="btn-delete-item" style="display:inline-flex;" onclick="deleteHwItem('${hw.id}')">🗑️ Удалить</button>` 
+        : '';
+
+      card.innerHTML = `
+        <div class="card-header-row">
+          <div>
+            <span class="badge-hw-tag">${hw.grade} Класс • ДЗ</span>
+            <div class="card-title">${hw.title}</div>
+          </div>
+          ${deleteBtn}
+        </div>
+        <div class="card-desc">${hw.desc}</div>
+        <div class="card-actions">
+          ${docBtnHtml}
+        </div>
+      `;
+      container.appendChild(card);
     });
+  }
+
+  /* 9. ЗАПУСК ТРЕНАЖЁРА С ВОПРОСАМИ (2 ТИПА) */
+  let activeSimObj = null;
+
+  function launchSimulator(simId) {
+    if (simId === "sim-releon-base") {
+      document.getElementById('tabReleonMain').click();
+      return;
+    }
+
+    activeSimObj = currentSimList.find(s => s.id === simId);
+    if (!activeSimObj) return;
+
+    const mount = document.getElementById('simulatorMountArea');
+    mount.innerHTML = '';
+
+    let qHtml = '';
+    if (activeSimObj.questions && activeSimObj.questions.length > 0) {
+      qHtml = `
+        <div style="background:#f8fafc; border:1.5px solid var(--border); border-radius:14px; padding:16px; margin-top:14px; display:flex; flex-direction:column; gap:12px;">
+          <h4 style="font-size:0.95rem; color:#0f172a; font-weight:800;">📝 Контрольные вопросы к уроку:</h4>
+          ${activeSimObj.questions.map((item, idx) => {
+            if (item.type === 'choice') {
+              // Кнопки вариантов ответа
+              const buttons = item.options.map(opt => `
+                <button type="button" class="btn-choice-opt" onclick="selectChoice(${idx}, this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>
+              `).join('');
+              return `
+                <div class="q-student-card" id="q_card_${idx}" data-type="choice" data-answer="${item.a.replace(/"/g, '&quot;')}">
+                  <span style="font-size:0.86rem; font-weight:700; color:#334155;">Вопрос ${idx+1}: ${item.q}</span>
+                  <div class="choice-buttons-grid">${buttons}</div>
+                  <input type="hidden" id="ans_field_${idx}">
+                </div>
+              `;
+            } else {
+              // Ввод текста
+              return `
+                <div class="q-student-card" id="q_card_${idx}" data-type="input" data-answer="${item.a.replace(/"/g, '&quot;')}">
+                  <span style="font-size:0.86rem; font-weight:700; color:#334155;">Вопрос ${idx+1}: ${item.q}</span>
+                  <input type="text" id="ans_field_${idx}" placeholder="Напишите ответ..." style="padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit; font-size:0.85rem; width:100%;">
+                </div>
+              `;
+            }
+          }).join('')}
+          <button class="btn-water-preset" style="background:#dcfce7; color:#15803d; border-color:#86efac; align-self:flex-start; padding:8px 16px;" onclick="checkAnswers()">✓ Проверить ответы</button>
+          <div id="answersStatus" style="font-size:0.85rem; font-weight:700;"></div>
+        </div>
+      `;
+    }
+
+    mount.innerHTML = `
+      <div class="lab-box">
+        <h2 style="font-size:1.15rem; color:#0f172a;">${activeSimObj.title} (${activeSimObj.grade} класс)</h2>
+        <p style="font-size:0.85rem; color:#64748b;">${activeSimObj.desc}</p>
+        <div style="background:#f8fafc; border:2px dashed #cbd5e1; border-radius:14px; padding:22px; text-align:center; color:#334155; font-size:0.88rem; margin-top:10px;">
+          🔬 Изучите тему и ответьте на контрольные вопросы учителя ниже.
+        </div>
+        ${qHtml}
+      </div>
+    `;
+
+    document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sectionActiveSimulator').classList.add('active');
+  }
+
+  // Выбор кнопки в тесте
+  window.selectChoice = function(qIdx, btn, value) {
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.btn-choice-opt').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById(`ans_field_${qIdx}`).value = value;
   };
 
-  // Удаление задания из Firebase
-  window.deleteTask = function(taskId) {
-    if (confirm("Вы уверены, что хотите удалить это задание из базы данных?")) {
-      const updated = currentTasks.filter(t => t.id !== taskId);
-      tasksRef.set(updated).catch(err => alert("Ошибка: " + err.message));
+  // Проверка всех типов вопросов
+  window.checkAnswers = function() {
+    if (!activeSimObj || !activeSimObj.questions) return;
+    let correct = 0;
+
+    activeSimObj.questions.forEach((item, idx) => {
+      const card = document.getElementById(`q_card_${idx}`);
+      const field = document.getElementById(`ans_field_${idx}`);
+      const userAns = (field.value || '').trim().toLowerCase();
+      const trueAns = (item.a || '').trim().toLowerCase();
+
+      if (userAns && userAns === trueAns) {
+        card.style.borderColor = '#16a34a';
+        card.style.backgroundColor = '#f0fdf4';
+        correct++;
+      } else {
+        card.style.borderColor = '#ef4444';
+        card.style.backgroundColor = '#fef2f2';
+      }
+    });
+
+    const status = document.getElementById('answersStatus');
+    if (correct === activeSimObj.questions.length) {
+      status.innerHTML = `<span style="color:var(--success);">✓ Превосходно! Все ответы верны (${correct}/${activeSimObj.questions.length}).</span>`;
+    } else {
+      status.innerHTML = `<span style="color:var(--danger);">Правильно: ${correct} из ${activeSimObj.questions.length}. Ошибки подсвечены красным.</span>`;
     }
   };
 
-  // Сброс к исходным
-  document.getElementById('btnResetDefaultTasks').onclick = () => {
-    if (confirm("Вернуть исходные 5 лабораторных работ в общую базу данных?")) {
-      tasksRef.set(INITIAL_TASKS);
+  /* 10. ЖУРНАЛ СДАННЫХ РАБОТ */
+  submissionsRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    const container = document.getElementById('submissionsContainer');
+    const badgeCount = document.getElementById('submissionsCount');
+
+    if (!data) {
+      container.innerHTML = '<div style="background:#fff; border-radius:14px; padding:20px; text-align:center; color:#64748b;">Работ пока нет. Когда ученики нажмут «Отправить», отчёты появятся здесь.</div>';
+      badgeCount.innerText = '0';
+      return;
     }
+
+    const list = Object.values(data).reverse();
+    badgeCount.innerText = list.length;
+    container.innerHTML = '';
+
+    list.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'submission-card';
+
+      let tableRows = '';
+      for (let i = 0; i < 5; i++) {
+        tableRows += `<td>${item.thermo[i]}° / ${item.releon[i]}°</td>`;
+      }
+
+      card.innerHTML = `
+        <div class="submission-header">
+          <div class="submission-name">👤 ${item.fio} <span style="color:#0284c7; font-size:0.85rem;">(${item.sClass})</span></div>
+          <div class="submission-time">🕒 Сдано в ${item.timestamp}</div>
+        </div>
+        <div style="font-size:0.8rem; color:#475569; margin-top:4px;">
+          <b>Замеры температуры (Термометр / Releon):</b>
+          <table style="width:100%; border:1px solid #e2e8f0; margin-top:4px; font-size:0.75rem; text-align:center;">
+            <tr style="background:#f8fafc;"><th>№1</th><th>№2</th><th>№3</th><th>№4</th><th>№5</th></tr>
+            <tr>${tableRows}</tr>
+          </table>
+        </div>
+        <div style="font-size:0.82rem; color:#0f172a; background:#f8fafc; padding:8px; border-radius:8px; margin-top:4px;">
+          <b>Вывод ученика:</b> ${item.conclusion}
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  });
+
+  document.getElementById('btnClearSubmissions').onclick = () => {
+    if (confirm("Очистить журнал сданных работ?")) submissionsRef.remove();
   };
 
-  /* ============================================================
-     НАВИГАЦИЯ И СКАЧИВАНИЕ WORD (.DOC)
-  ============================================================ */
+  /* 11. НАВИГАЦИЯ */
   const tabCatalog = document.getElementById('tabCatalog');
-  const tabSimulator = document.getElementById('tabSimulator');
+  const tabHwCatalog = document.getElementById('tabHwCatalog');
+  const tabReleonMain = document.getElementById('tabReleonMain');
   const sectionCatalog = document.getElementById('sectionCatalog');
-  const sectionSimulator = document.getElementById('sectionSimulator');
+  const sectionHwCatalog = document.getElementById('sectionHwCatalog');
+  const sectionReleon = document.getElementById('sectionReleon');
+  const sectionCreateSim = document.getElementById('sectionCreateSim');
+  const sectionCreateHw = document.getElementById('sectionCreateHw');
+  const sectionSubmissions = document.getElementById('sectionSubmissions');
+
+  function resetActiveTabs() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+  }
 
   tabCatalog.onclick = () => {
+    resetActiveTabs();
     tabCatalog.classList.add('active');
-    tabSimulator.classList.remove('active');
     sectionCatalog.classList.add('active');
-    sectionSimulator.classList.remove('active');
   };
 
-  tabSimulator.onclick = () => {
-    tabSimulator.classList.add('active');
-    tabCatalog.classList.remove('active');
-    sectionSimulator.classList.add('active');
-    sectionCatalog.classList.remove('active');
-    setDimensions();
+  tabHwCatalog.onclick = () => {
+    resetActiveTabs();
+    tabHwCatalog.classList.add('active');
+    sectionHwCatalog.classList.add('active');
   };
 
-  function openLab1() { tabSimulator.click(); }
-
-  const modal = document.getElementById('modalDoc');
-  document.getElementById('btnOpenModal').onclick = () => modal.style.display = 'flex';
-  document.getElementById('btnCloseModal').onclick = () => modal.style.display = 'none';
-  window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-
-  function downloadDoc1() {
-    const html = `
-    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-    <head><meta charset='utf-8'><title>Лабораторная работа №1</title></head>
-    <body style="font-family: Arial, sans-serif; line-height: 1.5;">
-      <h2 style="text-align: center;">Лабораторная работа №1<br>Определение размеров малых тел методом рядов</h2>
-      <p><b>ФИО ученика:</b> ___________________________ <b>Класс:</b> 7 «___»</p>
-      <p><b>Цель работы:</b> Научиться определять размеры малых тел способом рядов с помощью линейки.</p>
-      <p><b>Оборудование:</b> Измерительная линейка с ценой деления 1 мм, набор круп (горох, гречка, пшено, рис, чечевица).</p>
-      <br>
-      <table border="1" cellspacing="0" cellpadding="6" style="width: 100%; border-collapse: collapse; text-align: center;">
-        <tr style="background: #f2f2f2;">
-          <th>№ п/п</th>
-          <th>Название крупы</th>
-          <th>Число частиц (N), шт</th>
-          <th>Длина ряда (L), мм или см</th>
-          <th>Размер одной частицы (d = L / N)</th>
-          <th>Погрешность Δd = 1 мм / N</th>
-        </tr>
-        <tr><td>1</td><td>Горох</td><td></td><td></td><td></td><td></td></tr>
-        <tr><td>2</td><td>Гречка</td><td></td><td></td><td></td><td></td></tr>
-        <tr><td>3</td><td>Пшено</td><td></td><td></td><td></td><td></td></tr>
-      </table>
-      <br>
-      <p><b>Вывод:</b> ____________________________________________________________________________________</p>
-    </body>
-    </html>`;
-    saveBlob(html, 'Лабораторная_работа_1_метод_рядов.doc');
-  }
-
-  function downloadDocGeneric(num, title, eq) {
-    const html = `
-    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-    <head><meta charset='utf-8'><title>Лабораторная работа №${num}</title></head>
-    <body style="font-family: Arial, sans-serif; line-height: 1.5;">
-      <h2 style="text-align: center;">Лабораторная работа №${num}<br>${title}</h2>
-      <p><b>ФИО ученика:</b> ___________________________ <b>Класс:</b> 7 «___»</p>
-      <p><b>Цель работы:</b> Выполнить практические измерения по теме «${title}».</p>
-      <p><b>Оборудование:</b> ${eq}</p>
-      <br>
-      <table border="1" cellspacing="0" cellpadding="8" style="width: 100%; border-collapse: collapse; text-align: center;">
-        <tr style="background: #f2f2f2;">
-          <th>Опыт №</th>
-          <th>Измеряемая величина</th>
-          <th>Показания прибора</th>
-          <th>Результат вычислений</th>
-        </tr>
-        <tr><td>1</td><td></td><td></td><td></td></tr>
-        <tr><td>2</td><td></td><td></td><td></td></tr>
-      </table>
-      <br>
-      <p><b>Вывод:</b> ____________________________________________________________________________________</p>
-    </body>
-    </html>`;
-    saveBlob(html, `Лабораторная_работа_${num}.doc`);
-  }
-
-  function saveBlob(content, filename) {
-    const blob = new Blob(['\ufeff' + content], { type: 'application/msword' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  /* ============================================================
-     СИМУЛЯТОР МЕТОДА РЯДОВ (CANVAS)
-  ============================================================ */
-  const canvas = document.getElementById('labCanvas');
-  const ctx = canvas.getContext('2d');
-  const SCALE = 4.2;
-
-  const BODIES = {
-    pea: {
-      baseD: 5.2,
-      draw: (c, x, y, r) => {
-        c.save(); c.beginPath(); c.ellipse(x, y + r + 2, r * 0.9, r * 0.28, 0, 0, Math.PI * 2);
-        c.fillStyle = 'rgba(15, 23, 42, 0.18)'; c.fill(); c.restore();
-        let g = c.createRadialGradient(x - r*0.35, y - r*0.35, r*0.08, x, y, r);
-        g.addColorStop(0, '#d9f99d'); g.addColorStop(0.4, '#84cc16'); g.addColorStop(0.85, '#4d7c0f'); g.addColorStop(1, '#1a2e05');
-        c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
-        c.beginPath(); c.arc(x - r*0.3, y - r*0.35, r*0.22, 0, Math.PI * 2); c.fillStyle = 'rgba(255, 255, 255, 0.45)'; c.fill();
-      }
-    },
-    buckwheat: {
-      baseD: 3.4,
-      draw: (c, x, y, r) => {
-        c.save(); c.beginPath(); c.ellipse(x, y + r + 2, r * 0.85, r * 0.25, 0, 0, Math.PI * 2);
-        c.fillStyle = 'rgba(15, 23, 42, 0.2)'; c.fill(); c.restore();
-        c.save(); c.beginPath(); c.moveTo(x, y - r);
-        c.quadraticCurveTo(x + r*1.1, y + r*0.8, x + r*0.6, y + r);
-        c.quadraticCurveTo(x, y + r*0.7, x - r*0.6, y + r);
-        c.quadraticCurveTo(x - r*1.1, y + r*0.8, x, y - r); c.closePath();
-        let g = c.createRadialGradient(x - r*0.2, y - r*0.2, r*0.1, x, y, r);
-        g.addColorStop(0, '#d97706'); g.addColorStop(0.5, '#92400e'); g.addColorStop(0.85, '#591c06'); g.addColorStop(1, '#2c0c03');
-        c.fillStyle = g; c.fill();
-        c.strokeStyle = 'rgba(255, 255, 255, 0.22)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x, y - r); c.lineTo(x, y + r*0.75); c.stroke(); c.restore();
-      }
-    },
-    millet: {
-      baseD: 1.8,
-      draw: (c, x, y, r) => {
-        c.save(); c.beginPath(); c.ellipse(x, y + r + 1, r * 0.9, r * 0.28, 0, 0, Math.PI * 2);
-        c.fillStyle = 'rgba(15, 23, 42, 0.16)'; c.fill(); c.restore();
-        let g = c.createRadialGradient(x - r*0.3, y - r*0.3, r*0.1, x, y, r);
-        g.addColorStop(0, '#fef08a'); g.addColorStop(0.6, '#eab308'); g.addColorStop(1, '#a16207');
-        c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
-        c.fillStyle = '#451a03'; c.beginPath(); c.arc(x + r*0.35, y - r*0.2, r * 0.18, 0, Math.PI * 2); c.fill();
-      }
-    },
-    rice: {
-      baseD: 2.4,
-      draw: (c, x, y, r) => {
-        c.save(); c.beginPath(); c.ellipse(x, y + r + 2, r * 0.9, r * 0.3, 0, 0, Math.PI * 2);
-        c.fillStyle = 'rgba(15, 23, 42, 0.15)'; c.fill(); c.restore();
-        c.save(); c.beginPath(); c.ellipse(x, y, r, r * 1.55, 0, 0, Math.PI * 2);
-        let g = c.createRadialGradient(x - r*0.3, y - r*0.4, r*0.1, x, y, r*1.5);
-        g.addColorStop(0, '#ffffff'); g.addColorStop(0.5, '#f8fafc'); g.addColorStop(0.85, '#cbd5e1'); g.addColorStop(1, '#94a3b8');
-        c.fillStyle = g; c.fill();
-        c.strokeStyle = 'rgba(255, 255, 255, 0.6)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x, y - r*1.2); c.lineTo(x, y + r*1.2); c.stroke(); c.restore();
-      }
-    },
-    lentil: {
-      baseD: 4.6,
-      draw: (c, x, y, r) => {
-        c.save(); c.beginPath(); c.ellipse(x, y + r + 2, r * 0.95, r * 0.28, 0, 0, Math.PI * 2);
-        c.fillStyle = 'rgba(15, 23, 42, 0.18)'; c.fill(); c.restore();
-        let g = c.createRadialGradient(x - r*0.3, y - r*0.3, r*0.1, x, y, r);
-        g.addColorStop(0, '#fed7aa'); g.addColorStop(0.5, '#f97316'); g.addColorStop(0.85, '#c2410c'); g.addColorStop(1, '#7c2d12');
-        c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
-        c.beginPath(); c.arc(x, y, r * 0.86, 0, Math.PI * 2); c.strokeStyle = 'rgba(255, 255, 255, 0.2)'; c.lineWidth = 1; c.stroke();
-      }
-    }
+  tabReleonMain.onclick = () => {
+    resetActiveTabs();
+    tabReleonMain.classList.add('active');
+    sectionReleon.classList.add('active');
   };
 
-  let currentType = 'pea';
-  let countN = 10;
-  let exactDiameterMM = 5.2;
-  let currentUnit = 'cm';
-
-  let cameraOffsetX = 0;
-  const WORLD_ROW_X = 75;
-  const ROW_Y = 88;
-
-  let ruler = { worldZeroX: WORLD_ROW_X, y: 135, h: 100, isDraggingRuler: false, dragStartX: 0 };
-  let isPanningCamera = false, panStartX = 0;
-
-  function setDimensions() {
-    if (!sectionSimulator.classList.contains('active')) return;
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.resetTransform();
-    ctx.scale(dpr, dpr);
-    render();
-  }
-  window.addEventListener('resize', setDimensions);
-
-  function resetObjectSize() {
-    const b = BODIES[currentType].baseD;
-    exactDiameterMM = Number((b + (Math.random() - 0.5) * 0.2).toFixed(2));
-    document.getElementById('directInputN').value = countN;
-    clearInputs();
-  }
-
-  function drawRuler(viewW) {
-    const ry = ruler.y, rh = ruler.h;
-    ctx.save(); ctx.shadowColor = 'rgba(15, 23, 42, 0.25)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 8;
-    let bodyGrad = ctx.createLinearGradient(0, ry, 0, ry + rh);
-    bodyGrad.addColorStop(0, '#fbf3d5'); bodyGrad.addColorStop(0.04, '#f5e3aa'); bodyGrad.addColorStop(0.7, '#ebd189'); bodyGrad.addColorStop(1, '#cfac53');
-    ctx.fillStyle = bodyGrad; ctx.fillRect(0, ry, viewW, rh); ctx.restore();
-
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.55)'; ctx.fillRect(0, ry, viewW, 1.5);
-    ctx.fillStyle = '#b38d38'; ctx.fillRect(0, ry + rh - 1.5, viewW, 1.5);
-
-    ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#1e293b'; ctx.textAlign = 'center';
-    const zeroScreenX = ruler.worldZeroX + cameraOffsetX;
-    const startMM = Math.floor((-zeroScreenX) / SCALE) - 5;
-    const endMM = Math.ceil((viewW - zeroScreenX) / SCALE) + 5;
-
-    for (let mm = startMM; mm <= endMM; mm++) {
-      const px = zeroScreenX + mm * SCALE;
-      if (px < -30 || px > viewW + 30) continue;
-      let len = 7;
-      if (mm % 10 === 0) {
-        len = 22; ctx.lineWidth = 1.4; ctx.font = '700 13px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText(mm / 10, px, ry + len + 14);
-      } else if (mm % 5 === 0) { len = 13; ctx.lineWidth = 1.0; }
-      else { len = 7; ctx.lineWidth = 0.7; }
-      ctx.beginPath(); ctx.moveTo(px, ry); ctx.lineTo(px, ry + len); ctx.stroke();
-    }
-    ctx.font = '600 11px "Plus Jakarta Sans", sans-serif'; ctx.fillStyle = '#78350f'; ctx.textAlign = 'left';
-    ctx.fillText('шкала: см (1 дел = 1 мм)', 14, ry + rh - 12);
-  }
-
-  function render() {
-    const w = canvas.getBoundingClientRect().width;
-    const h = canvas.getBoundingClientRect().height;
-    ctx.clearRect(0, 0, w, h);
-
-    let tableGrad = ctx.createLinearGradient(0, 0, 0, h);
-    tableGrad.addColorStop(0, '#f8fafc'); tableGrad.addColorStop(1, '#eef2f6');
-    ctx.fillStyle = tableGrad; ctx.fillRect(0, 0, w, h);
-
-    ctx.strokeStyle = 'rgba(203, 213, 225, 0.6)'; ctx.lineWidth = 1;
-    for (let x = (cameraOffsetX % 24); x < w; x += 24) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-    for (let y = 0; y < h; y += 24) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-
-    const diaPx = exactDiameterMM * SCALE;
-    const r = diaPx / 2;
-    const totalRowPx = countN * diaPx;
-
-    for (let i = 0; i < countN; i++) {
-      const worldX = WORLD_ROW_X + r + i * diaPx;
-      const screenX = worldX + cameraOffsetX;
-      if (screenX + r >= -30 && screenX - r <= w + 30) BODIES[currentType].draw(ctx, screenX, ROW_Y, r);
-    }
-
-    const startScreenX = WORLD_ROW_X + cameraOffsetX;
-    const endScreenX = WORLD_ROW_X + totalRowPx + cameraOffsetX;
-    ctx.setLineDash([4, 4]); ctx.lineWidth = 1.3;
-
-    if (startScreenX >= -10 && startScreenX <= w + 10) {
-      ctx.strokeStyle = '#10b981'; ctx.beginPath(); ctx.moveTo(startScreenX, ROW_Y - r - 12); ctx.lineTo(startScreenX, ROW_Y + r + 42); ctx.stroke();
-    }
-    if (endScreenX >= -10 && endScreenX <= w + 10) {
-      ctx.strokeStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(endScreenX, ROW_Y - r - 12); ctx.lineTo(endScreenX, ROW_Y + r + 42); ctx.stroke();
-    }
-    ctx.setLineDash([]);
-    drawRuler(w);
-
-    if (endScreenX >= 0 && endScreenX <= w) {
-      ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(endScreenX, ruler.y);
-      ctx.lineTo(endScreenX - 6, ruler.y - 10); ctx.lineTo(endScreenX + 6, ruler.y - 10);
-      ctx.closePath(); ctx.fill();
-    }
-  }
-
-  function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x: clientX - rect.left, y: clientY - rect.top };
-  }
-
-  function handleStart(e) {
-    if (e.button && e.button !== 0) return;
-    const p = getPos(e);
-    if (p.y >= ruler.y && p.y <= ruler.y + ruler.h) {
-      ruler.isDraggingRuler = true;
-      ruler.dragStartX = p.x - (ruler.worldZeroX + cameraOffsetX);
-    } else {
-      isPanningCamera = true;
-      panStartX = p.x - cameraOffsetX;
-    }
-  }
-
-  function handleMove(e) {
-    if (!ruler.isDraggingRuler && !isPanningCamera) return;
-    const p = getPos(e);
-    if (ruler.isDraggingRuler) {
-      ruler.worldZeroX = p.x - ruler.dragStartX - cameraOffsetX;
-      render();
-    } else if (isPanningCamera) {
-      cameraOffsetX = p.x - panStartX;
-      render();
-    }
-  }
-
-  function handleEnd() { ruler.isDraggingRuler = false; isPanningCamera = false; }
-
-  canvas.addEventListener('mousedown', handleStart);
-  window.addEventListener('mousemove', handleMove);
-  window.addEventListener('mouseup', handleEnd);
-
-  canvas.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const delta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
-    cameraOffsetX -= delta * 0.8;
-    render();
-  }, { passive: false });
-
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') { cameraOffsetX += 30; render(); }
-    else if (e.key === 'ArrowRight') { cameraOffsetX -= 30; render(); }
-  });
-
-  canvas.addEventListener('touchstart', handleStart, { passive: true });
-  window.addEventListener('touchmove', handleMove, { passive: true });
-  window.addEventListener('touchend', handleEnd);
-
-  document.getElementById('btnGoStart').onclick = () => { cameraOffsetX = 35 - WORLD_ROW_X; render(); };
-  document.getElementById('btnGoEnd').onclick = () => {
-    const w = canvas.getBoundingClientRect().width;
-    const totalRowPx = countN * exactDiameterMM * SCALE;
-    cameraOffsetX = w - WORLD_ROW_X - totalRowPx - 80;
-    render();
-  };
-  document.getElementById('btnAlignZero').onclick = () => { ruler.worldZeroX = WORLD_ROW_X; render(); };
-
-  function setN(n) {
-    countN = Math.max(1, n);
-    document.getElementById('directInputN').value = countN;
-    clearInputs();
-    render();
-  }
-
-  document.getElementById('btnAdd1').onclick = () => setN(countN + 1);
-  document.getElementById('btnAdd5').onclick = () => setN(countN + 5);
-  document.getElementById('btnAdd10').onclick = () => setN(countN + 10);
-  document.getElementById('btnSub1').onclick = () => setN(countN - 1);
-  document.getElementById('btnSub10').onclick = () => setN(countN - 10);
-  document.getElementById('btnReset').onclick = () => setN(1);
-
-  document.getElementById('directInputN').onchange = (e) => {
-    const val = parseInt(e.target.value);
-    if (!isNaN(val)) setN(val);
+  tabCreateSim.onclick = () => {
+    resetActiveTabs();
+    tabCreateSim.classList.add('active');
+    sectionCreateSim.classList.add('active');
   };
 
-  document.querySelectorAll('.chip').forEach(c => {
-    c.onclick = () => {
-      document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
-      c.classList.add('active');
-      currentType = c.dataset.type;
-      resetObjectSize();
-      render();
-    };
-  });
-
-  const btnUnitCM = document.getElementById('btnUnitCM');
-  const btnUnitMM = document.getElementById('btnUnitMM');
-
-  function updateUnitLabels() {
-    const isCm = currentUnit === 'cm';
-    document.getElementById('lblL').innerText = isCm ? '1. Длина ряда L (см)' : '1. Длина ряда L (мм)';
-    document.getElementById('lblD').innerText = isCm ? '3. Размер зерна d (см)' : '3. Размер зерна d (мм)';
-    document.getElementById('lblErr').innerText = isCm ? '4. Погрешность Δd (см)' : '4. Погрешность Δd (мм)';
-    document.getElementById('lblErrFormula').innerText = isCm ? 'формула: 0.1 см ÷ N' : 'формула: 1 мм ÷ N';
-    document.getElementById('inL').placeholder = isCm ? 'например, 5.2' : 'например, 52';
-    document.getElementById('inErr').placeholder = isCm ? '0.1 ÷ N' : '1 ÷ N';
-    clearInputs();
-  }
-
-  btnUnitCM.onclick = () => { currentUnit = 'cm'; btnUnitCM.classList.add('active'); btnUnitMM.classList.remove('active'); updateUnitLabels(); };
-  btnUnitMM.onclick = () => { currentUnit = 'mm'; btnUnitMM.classList.add('active'); btnUnitCM.classList.remove('active'); updateUnitLabels(); };
-
-  function clearInputs() {
-    ['inL', 'inN', 'inD', 'inErr'].forEach(id => {
-      const el = document.getElementById(id);
-      el.value = ''; el.className = '';
-    });
-    document.getElementById('statusMsg').innerText = '';
-  }
-
-  document.getElementById('btnCheck').onclick = () => {
-    const isCm = currentUnit === 'cm';
-    const mult = isCm ? 0.1 : 1.0;
-
-    const uL = parseFloat(document.getElementById('inL').value.replace(',', '.'));
-    const uN = parseInt(document.getElementById('inN').value);
-    const uD = parseFloat(document.getElementById('inD').value.replace(',', '.'));
-    const uErr = parseFloat(document.getElementById('inErr').value.replace(',', '.'));
-
-    const trueL = (countN * exactDiameterMM) * mult;
-    const trueErr = (1.0 * mult) / countN;
-
-    let allOk = true;
-
-    const nEl = document.getElementById('inN');
-    if (uN === countN) { nEl.className = 'correct'; } else { nEl.className = 'incorrect'; allOk = false; }
-
-    const lEl = document.getElementById('inL');
-    if (!isNaN(uL) && Math.abs(uL - trueL) <= (1.5 * mult)) { lEl.className = 'correct'; } else { lEl.className = 'incorrect'; allOk = false; }
-
-    const dEl = document.getElementById('inD');
-    if (!isNaN(uD) && uN && !isNaN(uL) && Math.abs(uD - (uL / uN)) < (0.15 * mult)) { dEl.className = 'correct'; } else { dEl.className = 'incorrect'; allOk = false; }
-
-    const errEl = document.getElementById('inErr');
-    if (!isNaN(uErr) && Math.abs(uErr - trueErr) < (0.05 * mult)) { errEl.className = 'correct'; } else { errEl.className = 'incorrect'; allOk = false; }
-
-    const msg = document.getElementById('statusMsg');
-    if (allOk) {
-      msg.innerHTML = `<span style="color:var(--success);">✓ Отлично! Показания сняты верно, расчёт точен.</span>`;
-    } else {
-      msg.innerHTML = `<span style="color:var(--danger);">✕ Есть ошибки в подсвеченных полях. Проверьте снятые показания и формулу деления.</span>`;
-    }
+  tabCreateHw.onclick = () => {
+    resetActiveTabs();
+    tabCreateHw.classList.add('active');
+    sectionCreateHw.classList.add('active');
   };
 
-  // Старт
-  resetObjectSize();
+  tabSubmissions.onclick = () => {
+    resetActiveTabs();
+    tabSubmissions.classList.add('active');
+    sectionSubmissions.classList.add('active');
+  };
+
+  document.getElementById('btnBackToCatalog').onclick = () => {
+    tabCatalog.click();
+  };
+
   updateTeacherUI();
-  document.getElementById('btnAlignZero').click();
-  document.getElementById('btnGoStart').click();
+  updateSimulation();
 </script>
-
 </body>
 </html>
