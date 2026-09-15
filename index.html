@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Лабораторная работа: Метод рядов</title>
+  <title>Физика 7 класс: Лабораторные работы</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #3b82f6;
+      --primary: #2563eb;
       --primary-dark: #1d4ed8;
+      --teacher-accent: #059669;
       --bg: #0f172a;
       --surface: #ffffff;
       --surface-subtle: #f8fafc;
@@ -35,38 +36,341 @@
       background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
       color: var(--text);
       min-height: 100vh;
-      padding: 16px 12px 32px;
+      padding: 16px 12px 40px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    .app {
+    .container {
       width: 100%;
-      max-width: 860px;
+      max-width: 880px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
+    }
+
+    /* Верхняя панель */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge-class {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.2);
+      color: #60a5fa;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    .teacher-badge-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-teacher-auth {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: 0.2s;
+    }
+
+    .btn-teacher-auth:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: #ffffff;
+    }
+
+    .teacher-logged-pill {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(5, 150, 105, 0.25);
+      border: 1px solid #10b981;
+      color: #a7f3d0;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .btn-logout-teacher {
+      background: transparent;
+      border: none;
+      color: #f87171;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.76rem;
+      margin-left: 4px;
     }
 
     header {
       text-align: center;
+      padding: 4px 0 8px;
     }
 
     h1 {
-      font-size: 1.25rem;
+      font-size: 1.45rem;
       font-weight: 800;
       color: #ffffff;
       letter-spacing: -0.02em;
     }
 
     .subtitle {
-      font-size: 0.8rem;
+      font-size: 0.88rem;
       color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    /* Навигация */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: #cbd5e1;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .view-section {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .view-section.active {
+      display: flex;
+    }
+
+    /* Панель добавления заданий для учителя */
+    .teacher-editor-card {
+      display: none;
+      background: rgba(6, 78, 59, 0.35);
+      border: 1.5px solid #059669;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      flex-direction: column;
+      gap: 12px;
+      backdrop-filter: blur(12px);
+    }
+
+    .teacher-editor-card h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #34d399;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-row label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+
+    .form-row input, .form-row textarea {
+      padding: 10px 12px;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      outline: none;
+      user-select: text;
+    }
+
+    .form-row input:focus, .form-row textarea:focus {
+      border-color: #10b981;
+    }
+
+    .btn-add-task {
+      padding: 12px;
+      background: #059669;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-add-task:hover { background: #047857; }
+
+    /* Карточки заданий */
+    .lab-card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+
+    .lab-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .lab-number {
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .lab-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text);
       margin-top: 2px;
     }
 
-    /* Выбор тел */
+    .lab-desc {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      user-select: text;
+    }
+
+    .lab-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .btn-action-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+    .btn-action-primary:hover { background: var(--primary-dark); }
+
+    .btn-action-doc {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 14px;
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+    .btn-action-doc:hover { background: #e2e8f0; }
+
+    .btn-delete-task {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #fca5a5;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .btn-delete-task:hover { background: #fee2e2; }
+
+    /* Тренажер Лабораторной №1 */
+    .sim-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sim-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-instructions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
     .chips-row {
       display: flex;
       gap: 8px;
@@ -105,9 +409,8 @@
       border-radius: 50%;
     }
 
-    /* Настройка количества */
     .counter-card {
-      background: rgba(255, 255, 255, 0.96);
+      background: rgba(255, 255, 255, 0.98);
       border-radius: 16px;
       padding: 10px 14px;
       display: flex;
@@ -156,10 +459,7 @@
       color: var(--text);
       cursor: pointer;
     }
-
-    .btn-qty:hover {
-      background: #e2e8f0;
-    }
+    .btn-qty:hover { background: #e2e8f0; }
 
     .btn-qty.clear {
       background: var(--danger-bg);
@@ -167,7 +467,6 @@
       border-color: #fca5a5;
     }
 
-    /* Холст эксперимента */
     .canvas-wrapper {
       position: relative;
       background: #ffffff;
@@ -184,10 +483,7 @@
       touch-action: none;
       cursor: grab;
     }
-
-    canvas:active {
-      cursor: grabbing;
-    }
+    canvas:active { cursor: grabbing; }
 
     .controls-bottom {
       display: flex;
@@ -213,14 +509,10 @@
       cursor: pointer;
       text-align: center;
     }
+    .btn-ctrl:hover { background: #f1f5f9; }
 
-    .btn-ctrl:hover {
-      background: #f1f5f9;
-    }
-
-    /* Интерактивная таблица для самостоятельного расчета */
     .calc-card {
-      background: rgba(255, 255, 255, 0.96);
+      background: rgba(255, 255, 255, 0.98);
       border-radius: 18px;
       padding: 16px;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
@@ -268,7 +560,6 @@
       font-weight: 700;
       color: var(--text-muted);
       cursor: pointer;
-      transition: 0.2s;
     }
 
     .unit-btn.active {
@@ -309,12 +600,6 @@
       font-weight: 700;
       outline: none;
       user-select: text;
-      transition: 0.2s;
-    }
-
-    .field-item input:focus {
-      border-color: var(--primary);
-      background: #fff;
     }
 
     .field-item input.correct {
@@ -340,296 +625,639 @@
       font-size: 0.95rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
-      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
     }
-
-    .btn-verify:hover {
-      background: var(--primary-dark);
-    }
+    .btn-verify:hover { background: var(--primary-dark); }
 
     .status-msg {
       font-size: 0.85rem;
       font-weight: 600;
-      line-height: 1.35;
       text-align: center;
       min-height: 20px;
+    }
+
+    /* Модальное окно инструкции */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .modal-box {
+      background: #ffffff;
+      border-radius: 20px;
+      max-width: 620px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .btn-close {
+      background: transparent;
+      border: none;
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .modal-body {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #334155;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      user-select: text;
+    }
+
+    .modal-section-title {
+      font-weight: 700;
+      color: var(--primary);
     }
   </style>
 </head>
 <body>
 
-<div class="app">
+<div class="container">
+  <!-- Верхняя панель -->
+  <div class="top-header">
+    <div class="badge-class">7 Класс • Физика</div>
+    <div class="teacher-badge-box">
+      <button class="btn-teacher-auth" id="btnOpenTeacherLogin">🔐 Вход для учителя</button>
+      <div class="teacher-logged-pill" id="teacherLoggedPill">
+        <span>👩‍🏫 Евгения Васильевна</span>
+        <button class="btn-logout-teacher" id="btnLogoutTeacher" title="Выйти из режима учителя">выйти</button>
+      </div>
+    </div>
+  </div>
+
   <header>
-    <h1>Измерение методом рядов</h1>
-    <div class="subtitle">💻 ПК: колесико мыши / стрелки клавиатуры | 📱 Телефон: перелистывание пальцем</div>
+    <h1>Лабораторные работы по физике</h1>
+    <div class="subtitle">Интерактивные тренажёры и бланки оформления работ</div>
   </header>
 
-  <!-- Выбор малого тела -->
-  <div class="chips-row">
-    <button class="chip active" data-type="button">
-      <span class="dot" style="background: radial-gradient(circle at 35% 35%, #94a3b8, #1e293b);"></span>Пуговицы (~12 мм)
-    </button>
-    <button class="chip" data-type="pea">
-      <span class="dot" style="background: radial-gradient(circle at 35% 35%, #bef264, #4d7c0f);"></span>Горох (~5.5 мм)
-    </button>
-    <button class="chip" data-type="pearl">
-      <span class="dot" style="background: radial-gradient(circle at 35% 35%, #ffffff, #94a3b8);"></span>Жемчуг (~7.1 мм)
-    </button>
-    <button class="chip" data-type="bead">
-      <span class="dot" style="background: radial-gradient(circle at 35% 35%, #f472b6, #831843);"></span>Бусины (~4.2 мм)
-    </button>
-    <button class="chip" data-type="vitamin">
-      <span class="dot" style="background: radial-gradient(circle at 35% 35%, #fef08a, #854d0e);"></span>Витамины (~6.5 мм)
-    </button>
+  <!-- Навигационные вкладки -->
+  <div class="tabs-nav">
+    <button class="tab-btn active" id="tabCatalog">📚 Каталог заданий</button>
+    <button class="tab-btn" id="tabSimulator">🔬 Тренажёр: Работа №1 (Метод рядов)</button>
   </div>
 
-  <!-- Управление количеством -->
-  <div class="counter-card">
-    <div class="counter-left">
-      <span>Число тел (N):</span>
-      <input type="number" id="directInputN" min="1" max="5000" value="4">
-      <span style="color:var(--text-muted); font-size:0.8rem;">шт</span>
+  <!-- РАЗДЕЛ 1: Каталог заданий -->
+  <div class="view-section active" id="sectionCatalog">
+    
+    <!-- Панель учителя для добавления нового задания -->
+    <div class="teacher-editor-card" id="teacherEditorCard">
+      <h3>
+        <span>➕ Добавить новое задание по физике</span>
+        <button class="btn-qty clear" id="btnResetDefaultTasks" title="Восстановить исходные работы">Сброс к исходным</button>
+      </h3>
+      <div class="form-row">
+        <label>Название лабораторной / темы:</label>
+        <input type="text" id="newTaskTitle" placeholder="например: Лабораторная работа №6. Выяснение условий равновесия рычага">
+      </div>
+      <div class="form-row">
+        <label>Описание задания, цели и задачи:</label>
+        <textarea id="newTaskDesc" rows="2" placeholder="Укажите цели, требуемые расчеты и правила формулирования выводов..."></textarea>
+      </div>
+      <div class="form-row">
+        <label>Ссылка на файл оформления (Word, Яндекс.Диск, Google Документ):</label>
+        <input type="text" id="newTaskLink" placeholder="https://disk.yandex.ru/... или ссылка на документ">
+      </div>
+      <button class="btn-add-task" id="btnSaveNewTask">Опубликовать задание для 7 класса</button>
     </div>
-    <div class="btn-grid">
-      <button class="btn-qty" id="btnSub10">-10</button>
-      <button class="btn-qty" id="btnSub1">-1</button>
-      <button class="btn-qty" id="btnAdd1">+1</button>
-      <button class="btn-qty" id="btnAdd5">+5</button>
-      <button class="btn-qty" id="btnAdd10">+10</button>
-      <button class="btn-qty clear" id="btnReset">Сброс</button>
-    </div>
+
+    <!-- Список всех заданий -->
+    <div id="tasksContainer" style="display:flex; flex-direction:column; gap:12px;"></div>
+
   </div>
 
-  <!-- Холст эксперимента -->
-  <div class="canvas-wrapper">
-    <canvas id="labCanvas"></canvas>
-
-    <div class="controls-bottom">
-      <button class="btn-ctrl" id="btnGoStart">В начало (0 см)</button>
-      <button class="btn-ctrl" id="btnGoEnd">В конец ряда</button>
-      <button class="btn-ctrl" id="btnAlignZero">Ноль к началу ряда</button>
-    </div>
-  </div>
-
-  <!-- Интерактивная таблица для самостоятельных расчетов -->
-  <div class="calc-card">
-    <div class="calc-header">
-      <span class="calc-title">Таблица измерений и вычислений</span>
-      <div class="unit-switch-box">
-        <span>Считать в:</span>
-        <div class="unit-toggle">
-          <button class="unit-btn active" id="btnUnitCM">см</button>
-          <button class="unit-btn" id="btnUnitMM">мм</button>
+  <!-- РАЗДЕЛ 2: Тренажер Лабораторной №1 -->
+  <div class="view-section" id="sectionSimulator">
+    <div class="sim-container">
+      <div class="sim-top-bar">
+        <span style="color:#fff; font-weight:700; font-size:0.9rem;">Выберите крупу для опыта:</span>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-instructions" id="btnOpenModal">📖 Инструкция и цели</button>
+          <button class="btn-instructions" onclick="downloadDoc1()">📄 Скачать .doc</button>
         </div>
       </div>
+
+      <div class="chips-row">
+        <button class="chip active" data-type="pea">
+          <span class="dot" style="background: radial-gradient(circle at 35% 35%, #bef264, #4d7c0f);"></span>Горох (~5.2 мм)
+        </button>
+        <button class="chip" data-type="buckwheat">
+          <span class="dot" style="background: radial-gradient(circle at 35% 35%, #b45309, #451a03);"></span>Гречка (~3.4 мм)
+        </button>
+        <button class="chip" data-type="millet">
+          <span class="dot" style="background: radial-gradient(circle at 35% 35%, #fde047, #ca8a04);"></span>Пшено (~1.8 мм)
+        </button>
+        <button class="chip" data-type="rice">
+          <span class="dot" style="background: radial-gradient(circle at 35% 35%, #ffffff, #94a3b8);"></span>Рис (~2.4 мм)
+        </button>
+        <button class="chip" data-type="lentil">
+          <span class="dot" style="background: radial-gradient(circle at 35% 35%, #fb923c, #9a3412);"></span>Чечевица (~4.6 мм)
+        </button>
+      </div>
+
+      <div class="counter-card">
+        <div class="counter-left">
+          <span>Число крупинок (N):</span>
+          <input type="number" id="directInputN" min="1" max="5000" value="10">
+          <span style="color:var(--text-muted); font-size:0.8rem;">шт</span>
+        </div>
+        <div class="btn-grid">
+          <button class="btn-qty" id="btnSub10">-10</button>
+          <button class="btn-qty" id="btnSub1">-1</button>
+          <button class="btn-qty" id="btnAdd1">+1</button>
+          <button class="btn-qty" id="btnAdd5">+5</button>
+          <button class="btn-qty" id="btnAdd10">+10</button>
+          <button class="btn-qty clear" id="btnReset">Сброс</button>
+        </div>
+      </div>
+
+      <div class="canvas-wrapper">
+        <canvas id="labCanvas"></canvas>
+        <div class="controls-bottom">
+          <button class="btn-ctrl" id="btnGoStart">В начало (0 см)</button>
+          <button class="btn-ctrl" id="btnGoEnd">В конец ряда</button>
+          <button class="btn-ctrl" id="btnAlignZero">Ноль к началу ряда</button>
+        </div>
+      </div>
+
+      <div class="calc-card">
+        <div class="calc-header">
+          <span class="calc-title">Таблица измерений и вычислений</span>
+          <div class="unit-switch-box">
+            <span>Считать в:</span>
+            <div class="unit-toggle">
+              <button class="unit-btn active" id="btnUnitCM">см</button>
+              <button class="unit-btn" id="btnUnitMM">мм</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="fields-grid">
+          <div class="field-item">
+            <label id="lblL">1. Длина ряда L (см)</label>
+            <span class="formula">по шкале линейки</span>
+            <input type="number" step="any" inputmode="decimal" id="inL" placeholder="например, 5.2">
+          </div>
+          <div class="field-item">
+            <label>2. Число зёрен N (шт)</label>
+            <span class="formula">количество в ряду</span>
+            <input type="number" inputmode="numeric" id="inN" placeholder="10">
+          </div>
+          <div class="field-item">
+            <label id="lblD">3. Размер зерна d (см)</label>
+            <span class="formula">формула: L ÷ N</span>
+            <input type="number" step="any" inputmode="decimal" id="inD" placeholder="L ÷ N">
+          </div>
+          <div class="field-item">
+            <label id="lblErr">4. Погрешность Δd (см)</label>
+            <span class="formula" id="lblErrFormula">формула: 0.1 см ÷ N</span>
+            <input type="number" step="any" inputmode="decimal" id="inErr" placeholder="0.1 ÷ N">
+          </div>
+        </div>
+
+        <button class="btn-verify" id="btnCheck">Проверить результат</button>
+        <div class="status-msg" id="statusMsg"></div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <div class="fields-grid">
-      <div class="field-item">
-        <label id="lblL">1. Длина ряда L (см)</label>
-        <span class="formula">по шкале линейки</span>
-        <input type="number" step="any" inputmode="decimal" id="inL" placeholder="например, 4.8">
+<!-- Модальное окно инструкции -->
+<div class="modal-backdrop" id="modalDoc">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">Лабораторная работа №1</span>
+      <button class="btn-close" id="btnCloseModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-title">Тема:</div>
+        <div>Определение размеров малых тел методом рядов.</div>
       </div>
-
-      <div class="field-item">
-        <label>2. Число тел N (шт)</label>
-        <span class="formula">количество в ряду</span>
-        <input type="number" inputmode="numeric" id="inN" placeholder="4">
+      <div>
+        <div class="modal-section-title">Цель работы:</div>
+        <div>Научиться определять линейные размеры малых тел (круп и семян), размеры которых невозможно измерить непосредственно обычной линейкой.</div>
       </div>
-
-      <div class="field-item">
-        <label id="lblD">3. Диаметр d (см)</label>
-        <span class="formula">формула: L ÷ N</span>
-        <input type="number" step="any" inputmode="decimal" id="inD" placeholder="L ÷ N">
+      <div>
+        <div class="modal-section-title">Оборудование:</div>
+        <div>Измерительная линейка с миллиметровыми делениями, набор сыпучих кухонных тел (горох, гречка, пшено, рис, чечевица).</div>
       </div>
-
-      <div class="field-item">
-        <label id="lblErr">4. Погрешность Δd (см)</label>
-        <span class="formula" id="lblErrFormula">формула: 0.1 см ÷ N</span>
-        <input type="number" step="any" inputmode="decimal" id="inErr" placeholder="0.1 ÷ N">
+      <div>
+        <div class="modal-section-title">Теоретическое обоснование:</div>
+        <div>Если уложить вплотную в ряд $N$ одинаковых крупинок и измерить длину ряда $L$, средний диаметр одной крупинки равен: <b>$d = L / N$</b>. Погрешность измерения одного тела уменьшается в $N$ раз: <b>$\Delta d = \Delta L / N$</b>, где $\Delta L$ — цена деления линейки (1 мм или 0.1 см).</div>
       </div>
     </div>
-
-    <button class="btn-verify" id="btnCheck">Проверить результат</button>
-    <div class="status-msg" id="statusMsg"></div>
   </div>
 </div>
 
 <script>
+  /* ============================================================
+     СИСТЕМА КЛЮЧЕЙ И РЕЖИМ УЧИТЕЛЯ
+  ============================================================ */
+  const TEACHER_KEYS = [
+    "Evgeniya_Vasilievna#Phys2026!7A$MasterKey",
+    "Kx9$vL#TeacherPhys_School14^Qz82",
+    "Tch7A_Quantum*Secure!948Xp#Access",
+    "PhysLab!SuperAuth#7Grade_Zk91$Root",
+    "DynWave#2026&LabTeacher_Fx49@Admin"
+  ];
+
+  let isTeacherMode = localStorage.getItem('phys_teacher_active') === 'true';
+
+  const btnOpenTeacherLogin = document.getElementById('btnOpenTeacherLogin');
+  const teacherLoggedPill = document.getElementById('teacherLoggedPill');
+  const btnLogoutTeacher = document.getElementById('btnLogoutTeacher');
+  const teacherEditorCard = document.getElementById('teacherEditorCard');
+
+  function updateTeacherUI() {
+    if (isTeacherMode) {
+      btnOpenTeacherLogin.style.display = 'none';
+      teacherLoggedPill.style.display = 'inline-flex';
+      teacherEditorCard.style.display = 'flex';
+    } else {
+      btnOpenTeacherLogin.style.display = 'inline-flex';
+      teacherLoggedPill.style.display = 'none';
+      teacherEditorCard.style.display = 'none';
+    }
+    renderTasks();
+  }
+
+  btnOpenTeacherLogin.onclick = () => {
+    const inputKey = prompt("Введите секретный ключ учителя физики на английском языке:");
+    if (!inputKey) return;
+
+    if (TEACHER_KEYS.includes(inputKey.trim())) {
+      isTeacherMode = true;
+      localStorage.setItem('phys_teacher_active', 'true');
+      alert("Доступ подтверждён! Режим управления заданиями активирован.");
+      updateTeacherUI();
+    } else {
+      alert("Ошибка: неверный ключ доступа!");
+    }
+  };
+
+  btnLogoutTeacher.onclick = () => {
+    isTeacherMode = false;
+    localStorage.removeItem('phys_teacher_active');
+    updateTeacherUI();
+  };
+
+  /* ============================================================
+     БАЗА ДАННЫХ ЗАДАНИЙ (ВСТРОЕННЫЕ + ПОЛЬЗОВАТЕЛЬСКИЕ)
+  ============================================================ */
+  const INITIAL_TASKS = [
+    {
+      id: "builtin-1",
+      num: 1,
+      title: "Определение размеров малых тел методом рядов",
+      desc: "Измерение диаметра мелких кухонных круп (горох, гречка, пшено, рис, чечевица) с помощью подвижной миллиметровой линейки и расчет погрешности.",
+      isSim: true,
+      docType: "lab1"
+    },
+    {
+      id: "builtin-2",
+      num: 2,
+      title: "Измерение массы тела на рычажных весах",
+      desc: "Ознакомление с правилами взвешивания, уравновешивание коромысла весов разновесами (гирьками) и точное определение массы твёрдых тел.",
+      isSim: false,
+      docType: "generic",
+      eq: "Рычажные весы, набор гирь (разновесов), исследуемые твёрдые тела."
+    },
+    {
+      id: "builtin-3",
+      num: 3,
+      title: "Измерение объема тела с помощью мензурки",
+      desc: "Определение цены деления измерительного цилиндра (мензурки) и экспериментальное измерение объема погруженного тела неправильной формы.",
+      isSim: false,
+      docType: "generic",
+      eq: "Измерительный цилиндр (мензурка), вода, твёрдое тело на нити."
+    },
+    {
+      id: "builtin-4",
+      num: 4,
+      title: "Определение плотности твёрдого тела",
+      desc: "Экспериментальное нахождение массы тела на весах, его объема мензуркой и расчет плотности вещества по формуле: ρ = m / V.",
+      isSim: false,
+      docType: "generic",
+      eq: "Весы с разновесами, измерительный цилиндр с водой, исследуемое твёрдое тело на нити."
+    },
+    {
+      id: "builtin-5",
+      num: 5,
+      title: "Градуирование пружины и измерение сил динамометром",
+      desc: "Построение шкалы динамометра с заданной ценой деления на основе закона Гука и измерение веса подвешиваемых грузов.",
+      isSim: false,
+      docType: "generic",
+      eq: "Динамометр со скрытой шкалой, набор грузов по 100 г, полоска бумаги, линейка."
+    }
+  ];
+
+  let currentTasks = JSON.parse(localStorage.getItem('phys_tasks_list_v4')) || INITIAL_TASKS;
+
+  function saveTasks() {
+    localStorage.setItem('phys_tasks_list_v4', JSON.stringify(currentTasks));
+  }
+
+  function renderTasks() {
+    const container = document.getElementById('tasksContainer');
+    container.innerHTML = '';
+
+    if (currentTasks.length === 0) {
+      container.innerHTML = '<div style="background:#fff; border-radius:14px; padding:20px; text-align:center; color:#64748b; font-weight:600;">Список заданий пуст. Войдите как учитель, чтобы добавить новые работы или нажмите «Сброс к исходным».</div>';
+      return;
+    }
+
+    currentTasks.forEach((task, index) => {
+      const card = document.createElement('div');
+      card.className = 'lab-card';
+
+      let actionsHtml = '';
+      if (task.isSim) {
+        actionsHtml += `<button class="btn-action-primary" onclick="openLab1()">Запустить тренажёр</button>`;
+      }
+      if (task.docType === 'lab1') {
+        actionsHtml += `<button class="btn-action-doc" onclick="downloadDoc1()">📄 Скачать бланк отчёта (.doc)</button>`;
+      } else if (task.docType === 'generic') {
+        actionsHtml += `<button class="btn-action-doc" onclick="downloadDocGeneric(${task.num || index + 1}, '${task.title}', '${task.eq || ''}')">📄 Скачать бланк отчёта (.doc)</button>`;
+      } else if (task.customLink) {
+        actionsHtml += `<a class="btn-action-doc" href="${task.customLink}" target="_blank">🔗 Открыть файл учителя</a>`;
+      }
+
+      const deleteBtnHtml = isTeacherMode 
+        ? `<button class="btn-delete-task" style="display:inline-flex;" onclick="deleteTask('${task.id}')">🗑️ Удалить</button>` 
+        : '';
+
+      card.innerHTML = `
+        <div class="lab-header-row">
+          <div>
+            <div class="lab-number">Задание №${index + 1}</div>
+            <div class="lab-title">${task.title}</div>
+          </div>
+          ${deleteBtnHtml}
+        </div>
+        <div class="lab-desc">${task.desc}</div>
+        <div class="lab-actions">${actionsHtml}</div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  document.getElementById('btnSaveNewTask').onclick = () => {
+    const title = document.getElementById('newTaskTitle').value.trim();
+    const desc = document.getElementById('newTaskDesc').value.trim();
+    const link = document.getElementById('newTaskLink').value.trim();
+
+    if (!title) {
+      alert("Пожалуйста, введите название лабораторной работы!");
+      return;
+    }
+
+    const newTask = {
+      id: "custom-" + Date.now(),
+      num: currentTasks.length + 1,
+      title: title,
+      desc: desc || "Инструкция и методические указания к выполнению работы.",
+      isSim: false,
+      customLink: link || null
+    };
+
+    currentTasks.push(newTask);
+    saveTasks();
+    renderTasks();
+
+    document.getElementById('newTaskTitle').value = '';
+    document.getElementById('newTaskDesc').value = '';
+    document.getElementById('newTaskLink').value = '';
+    alert("Задание успешно добавлено в каталог 7 класса!");
+  };
+
+  window.deleteTask = function(taskId) {
+    if (confirm("Вы уверены, что хотите удалить это задание из списка?")) {
+      currentTasks = currentTasks.filter(t => t.id !== taskId);
+      saveTasks();
+      renderTasks();
+    }
+  };
+
+  document.getElementById('btnResetDefaultTasks').onclick = () => {
+    if (confirm("Вернуть исходные 5 стандартных лабораторных работ?")) {
+      currentTasks = [...INITIAL_TASKS];
+      saveTasks();
+      renderTasks();
+    }
+  };
+
+  /* ============================================================
+     НАВИГАЦИЯ И СКАЧИВАНИЕ ФАЙЛОВ WORD
+  ============================================================ */
+  const tabCatalog = document.getElementById('tabCatalog');
+  const tabSimulator = document.getElementById('tabSimulator');
+  const sectionCatalog = document.getElementById('sectionCatalog');
+  const sectionSimulator = document.getElementById('sectionSimulator');
+
+  tabCatalog.onclick = () => {
+    tabCatalog.classList.add('active');
+    tabSimulator.classList.remove('active');
+    sectionCatalog.classList.add('active');
+    sectionSimulator.classList.remove('active');
+  };
+
+  tabSimulator.onclick = () => {
+    tabSimulator.classList.add('active');
+    tabCatalog.classList.remove('active');
+    sectionSimulator.classList.add('active');
+    sectionCatalog.classList.remove('active');
+    setDimensions();
+  };
+
+  function openLab1() { tabSimulator.click(); }
+
+  const modal = document.getElementById('modalDoc');
+  document.getElementById('btnOpenModal').onclick = () => modal.style.display = 'flex';
+  document.getElementById('btnCloseModal').onclick = () => modal.style.display = 'none';
+  window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+  function downloadDoc1() {
+    const html = `
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+    <head><meta charset='utf-8'><title>Лабораторная работа №1</title></head>
+    <body style="font-family: Arial, sans-serif; line-height: 1.5;">
+      <h2 style="text-align: center;">Лабораторная работа №1<br>Определение размеров малых тел методом рядов</h2>
+      <p><b>ФИО ученика:</b> ___________________________ <b>Класс:</b> 7 «___»</p>
+      <p><b>Цель работы:</b> Научиться определять размеры малых тел способом рядов с помощью линейки.</p>
+      <p><b>Оборудование:</b> Измерительная линейка с ценой деления 1 мм, набор круп (горох, гречка, пшено, рис, чечевица).</p>
+      <br>
+      <table border="1" cellspacing="0" cellpadding="6" style="width: 100%; border-collapse: collapse; text-align: center;">
+        <tr style="background: #f2f2f2;">
+          <th>№ п/п</th>
+          <th>Название крупы</th>
+          <th>Число частиц (N), шт</th>
+          <th>Длина ряда (L), мм или см</th>
+          <th>Размер одной частицы (d = L / N)</th>
+          <th>Погрешность Δd = 1 мм / N</th>
+        </tr>
+        <tr><td>1</td><td>Горох</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>2</td><td>Гречка</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>3</td><td>Пшено</td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <br>
+      <p><b>Вывод:</b> ____________________________________________________________________________________</p>
+    </body>
+    </html>`;
+    saveBlob(html, 'Лабораторная_работа_1_метод_рядов.doc');
+  }
+
+  function downloadDocGeneric(num, title, eq) {
+    const html = `
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+    <head><meta charset='utf-8'><title>Лабораторная работа №${num}</title></head>
+    <body style="font-family: Arial, sans-serif; line-height: 1.5;">
+      <h2 style="text-align: center;">Лабораторная работа №${num}<br>${title}</h2>
+      <p><b>ФИО ученика:</b> ___________________________ <b>Класс:</b> 7 «___»</p>
+      <p><b>Цель работы:</b> Выполнить практические измерения по теме «${title}».</p>
+      <p><b>Оборудование:</b> ${eq}</p>
+      <br>
+      <table border="1" cellspacing="0" cellpadding="8" style="width: 100%; border-collapse: collapse; text-align: center;">
+        <tr style="background: #f2f2f2;">
+          <th>Опыт №</th>
+          <th>Измеряемая величина</th>
+          <th>Показания прибора</th>
+          <th>Результат вычислений</th>
+        </tr>
+        <tr><td>1</td><td></td><td></td><td></td></tr>
+        <tr><td>2</td><td></td><td></td><td></td></tr>
+      </table>
+      <br>
+      <p><b>Вывод:</b> ____________________________________________________________________________________</p>
+    </body>
+    </html>`;
+    saveBlob(html, `Лабораторная_работа_${num}.doc`);
+  }
+
+  function saveBlob(content, filename) {
+    const blob = new Blob(['\ufeff' + content], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  /* ============================================================
+     ИНТЕРАКТИВНЫЙ ТРЕНАЖЁР РЯДОВ (CANVAS)
+  ============================================================ */
   const canvas = document.getElementById('labCanvas');
   const ctx = canvas.getContext('2d');
-
-  const SCALE = 4.2; // 1 мм = 4.2 px
+  const SCALE = 4.2;
 
   const BODIES = {
-    button: {
-      baseD: 12.0,
-      draw: (c, x, y, r) => {
-        c.save();
-        c.beginPath();
-        c.ellipse(x, y + r + 2, r * 0.96, r * 0.28, 0, 0, Math.PI * 2);
-        c.fillStyle = 'rgba(15, 23, 42, 0.22)';
-        c.fill();
-        c.restore();
-
-        let g = c.createRadialGradient(x - r*0.3, y - r*0.3, r*0.1, x, y, r);
-        g.addColorStop(0, '#94a3b8');
-        g.addColorStop(0.5, '#475569');
-        g.addColorStop(0.85, '#334155');
-        g.addColorStop(1, '#0f172a');
-        c.fillStyle = g;
-        c.beginPath();
-        c.arc(x, y, r, 0, Math.PI * 2);
-        c.fill();
-
-        c.beginPath();
-        c.arc(x, y, r * 0.88, 0, Math.PI * 2);
-        c.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-        c.lineWidth = 1.2;
-        c.stroke();
-
-        let inGrad = c.createRadialGradient(x + r*0.2, y + r*0.2, r*0.05, x, y, r*0.65);
-        inGrad.addColorStop(0, '#1e293b');
-        inGrad.addColorStop(0.8, '#334155');
-        inGrad.addColorStop(1, '#64748b');
-        c.fillStyle = inGrad;
-        c.beginPath();
-        c.arc(x, y, r * 0.65, 0, Math.PI * 2);
-        c.fill();
-
-        const dist = r * 0.28;
-        const hr = r * 0.11;
-        const holes = [
-          { dx: -dist, dy: -dist }, { dx: dist, dy: -dist },
-          { dx: -dist, dy: dist }, { dx: dist, dy: dist }
-        ];
-
-        c.strokeStyle = '#f8fafc';
-        c.lineWidth = 1.5;
-        c.lineCap = 'round';
-        c.beginPath();
-        c.moveTo(x - dist, y - dist); c.lineTo(x + dist, y + dist);
-        c.moveTo(x + dist, y - dist); c.lineTo(x - dist, y + dist);
-        c.stroke();
-
-        holes.forEach(h => {
-          c.fillStyle = '#090d16';
-          c.beginPath();
-          c.arc(x + h.dx, y + h.dy, hr, 0, Math.PI * 2);
-          c.fill();
-        });
-      }
-    },
     pea: {
-      baseD: 5.5,
+      baseD: 5.2,
       draw: (c, x, y, r) => {
-        c.save();
-        c.beginPath();
-        c.ellipse(x, y + r + 2, r * 0.9, r * 0.28, 0, 0, Math.PI * 2);
-        c.fillStyle = 'rgba(15, 23, 42, 0.18)';
-        c.fill();
-        c.restore();
-
+        c.save(); c.beginPath(); c.ellipse(x, y + r + 2, r * 0.9, r * 0.28, 0, 0, Math.PI * 2);
+        c.fillStyle = 'rgba(15, 23, 42, 0.18)'; c.fill(); c.restore();
         let g = c.createRadialGradient(x - r*0.35, y - r*0.35, r*0.08, x, y, r);
-        g.addColorStop(0, '#bef264');
-        g.addColorStop(0.5, '#65a30d');
-        g.addColorStop(0.85, '#3f6212');
-        g.addColorStop(1, '#1a2e05');
-        c.fillStyle = g;
-        c.beginPath();
-        c.arc(x, y, r, 0, Math.PI * 2);
-        c.fill();
+        g.addColorStop(0, '#d9f99d'); g.addColorStop(0.4, '#84cc16'); g.addColorStop(0.85, '#4d7c0f'); g.addColorStop(1, '#1a2e05');
+        c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+        c.beginPath(); c.arc(x - r*0.3, y - r*0.35, r*0.22, 0, Math.PI * 2); c.fillStyle = 'rgba(255, 255, 255, 0.45)'; c.fill();
       }
     },
-    pearl: {
-      baseD: 7.14,
+    buckwheat: {
+      baseD: 3.4,
       draw: (c, x, y, r) => {
-        c.save();
-        c.beginPath();
-        c.ellipse(x, y + r + 2, r * 0.95, r * 0.3, 0, 0, Math.PI * 2);
-        c.fillStyle = 'rgba(15, 23, 42, 0.16)';
-        c.fill();
-        c.restore();
-
-        let g = c.createRadialGradient(x - r*0.35, y - r*0.35, r*0.05, x, y, r);
-        g.addColorStop(0, '#ffffff');
-        g.addColorStop(0.75, '#cbd5e1');
-        g.addColorStop(1, '#334155');
-        c.fillStyle = g;
-        c.beginPath();
-        c.arc(x, y, r, 0, Math.PI * 2);
-        c.fill();
+        c.save(); c.beginPath(); c.ellipse(x, y + r + 2, r * 0.85, r * 0.25, 0, 0, Math.PI * 2);
+        c.fillStyle = 'rgba(15, 23, 42, 0.2)'; c.fill(); c.restore();
+        c.save(); c.beginPath(); c.moveTo(x, y - r);
+        c.quadraticCurveTo(x + r*1.1, y + r*0.8, x + r*0.6, y + r);
+        c.quadraticCurveTo(x, y + r*0.7, x - r*0.6, y + r);
+        c.quadraticCurveTo(x - r*1.1, y + r*0.8, x, y - r); c.closePath();
+        let g = c.createRadialGradient(x - r*0.2, y - r*0.2, r*0.1, x, y, r);
+        g.addColorStop(0, '#d97706'); g.addColorStop(0.5, '#92400e'); g.addColorStop(0.85, '#591c06'); g.addColorStop(1, '#2c0c03');
+        c.fillStyle = g; c.fill();
+        c.strokeStyle = 'rgba(255, 255, 255, 0.22)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x, y - r); c.lineTo(x, y + r*0.75); c.stroke(); c.restore();
       }
     },
-    bead: {
-      baseD: 4.2,
+    millet: {
+      baseD: 1.8,
       draw: (c, x, y, r) => {
-        c.save();
-        c.beginPath();
-        c.ellipse(x, y + r + 2, r * 0.85, r * 0.25, 0, 0, Math.PI * 2);
-        c.fillStyle = 'rgba(15, 23, 42, 0.2)';
-        c.fill();
-        c.restore();
-
+        c.save(); c.beginPath(); c.ellipse(x, y + r + 1, r * 0.9, r * 0.28, 0, 0, Math.PI * 2);
+        c.fillStyle = 'rgba(15, 23, 42, 0.16)'; c.fill(); c.restore();
         let g = c.createRadialGradient(x - r*0.3, y - r*0.3, r*0.1, x, y, r);
-        g.addColorStop(0, '#f472b6');
-        g.addColorStop(0.65, '#db2777');
-        g.addColorStop(1, '#500724');
-        c.fillStyle = g;
-        c.beginPath();
-        c.arc(x, y, r, 0, Math.PI * 2);
-        c.fill();
-
-        c.fillStyle = '#2c0413';
-        c.beginPath();
-        c.arc(x, y, r * 0.26, 0, Math.PI * 2);
-        c.fill();
+        g.addColorStop(0, '#fef08a'); g.addColorStop(0.6, '#eab308'); g.addColorStop(1, '#a16207');
+        c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#451a03'; c.beginPath(); c.arc(x + r*0.35, y - r*0.2, r * 0.18, 0, Math.PI * 2); c.fill();
       }
     },
-    vitamin: {
-      baseD: 6.5,
+    rice: {
+      baseD: 2.4,
       draw: (c, x, y, r) => {
-        c.save();
-        c.beginPath();
-        c.ellipse(x, y + r + 2, r * 0.95, r * 0.28, 0, 0, Math.PI * 2);
-        c.fillStyle = 'rgba(15, 23, 42, 0.16)';
-        c.fill();
-        c.restore();
-
-        let g = c.createRadialGradient(x - r*0.3, y - r*0.3, r*0.08, x, y, r);
-        g.addColorStop(0, '#fef08a');
-        g.addColorStop(0.55, '#f59e0b');
-        g.addColorStop(1, '#78350f');
-        c.fillStyle = g;
-        c.beginPath();
-        c.arc(x, y, r, 0, Math.PI * 2);
-        c.fill();
+        c.save(); c.beginPath(); c.ellipse(x, y + r + 2, r * 0.9, r * 0.3, 0, 0, Math.PI * 2);
+        c.fillStyle = 'rgba(15, 23, 42, 0.15)'; c.fill(); c.restore();
+        c.save(); c.beginPath(); c.ellipse(x, y, r, r * 1.55, 0, 0, Math.PI * 2);
+        let g = c.createRadialGradient(x - r*0.3, y - r*0.4, r*0.1, x, y, r*1.5);
+        g.addColorStop(0, '#ffffff'); g.addColorStop(0.5, '#f8fafc'); g.addColorStop(0.85, '#cbd5e1'); g.addColorStop(1, '#94a3b8');
+        c.fillStyle = g; c.fill();
+        c.strokeStyle = 'rgba(255, 255, 255, 0.6)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x, y - r*1.2); c.lineTo(x, y + r*1.2); c.stroke(); c.restore();
+      }
+    },
+    lentil: {
+      baseD: 4.6,
+      draw: (c, x, y, r) => {
+        c.save(); c.beginPath(); c.ellipse(x, y + r + 2, r * 0.95, r * 0.28, 0, 0, Math.PI * 2);
+        c.fillStyle = 'rgba(15, 23, 42, 0.18)'; c.fill(); c.restore();
+        let g = c.createRadialGradient(x - r*0.3, y - r*0.3, r*0.1, x, y, r);
+        g.addColorStop(0, '#fed7aa'); g.addColorStop(0.5, '#f97316'); g.addColorStop(0.85, '#c2410c'); g.addColorStop(1, '#7c2d12');
+        c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+        c.beginPath(); c.arc(x, y, r * 0.86, 0, Math.PI * 2); c.strokeStyle = 'rgba(255, 255, 255, 0.2)'; c.lineWidth = 1; c.stroke();
       }
     }
   };
 
-  let currentType = 'button';
-  let countN = 4;
-  let exactDiameterMM = 12.0;
-  let currentUnit = 'cm'; // 'cm' или 'mm'
+  let currentType = 'pea';
+  let countN = 10;
+  let exactDiameterMM = 5.2;
+  let currentUnit = 'cm';
 
   let cameraOffsetX = 0;
   const WORLD_ROW_X = 75;
   const ROW_Y = 88;
 
-  let ruler = {
-    worldZeroX: WORLD_ROW_X,
-    y: 135,
-    h: 100,
-    isDraggingRuler: false,
-    dragStartX: 0
-  };
-
-  let isPanningCamera = false;
-  let panStartX = 0;
+  let ruler = { worldZeroX: WORLD_ROW_X, y: 135, h: 100, isDraggingRuler: false, dragStartX: 0 };
+  let isPanningCamera = false, panStartX = 0;
 
   function setDimensions() {
+    if (!sectionSimulator.classList.contains('active')) return;
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * dpr;
@@ -642,38 +1270,22 @@
 
   function resetObjectSize() {
     const b = BODIES[currentType].baseD;
-    exactDiameterMM = Number((b + (Math.random() - 0.5) * 0.25).toFixed(2));
+    exactDiameterMM = Number((b + (Math.random() - 0.5) * 0.2).toFixed(2));
     document.getElementById('directInputN').value = countN;
     clearInputs();
   }
 
   function drawRuler(viewW) {
-    const ry = ruler.y;
-    const rh = ruler.h;
-
-    ctx.save();
-    ctx.shadowColor = 'rgba(15, 23, 42, 0.25)';
-    ctx.shadowBlur = 16;
-    ctx.shadowOffsetY = 8;
-
+    const ry = ruler.y, rh = ruler.h;
+    ctx.save(); ctx.shadowColor = 'rgba(15, 23, 42, 0.25)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 8;
     let bodyGrad = ctx.createLinearGradient(0, ry, 0, ry + rh);
-    bodyGrad.addColorStop(0, '#fbf3d5');
-    bodyGrad.addColorStop(0.04, '#f5e3aa');
-    bodyGrad.addColorStop(0.7, '#ebd189');
-    bodyGrad.addColorStop(1, '#cfac53');
-    ctx.fillStyle = bodyGrad;
-    ctx.fillRect(0, ry, viewW, rh);
-    ctx.restore();
+    bodyGrad.addColorStop(0, '#fbf3d5'); bodyGrad.addColorStop(0.04, '#f5e3aa'); bodyGrad.addColorStop(0.7, '#ebd189'); bodyGrad.addColorStop(1, '#cfac53');
+    ctx.fillStyle = bodyGrad; ctx.fillRect(0, ry, viewW, rh); ctx.restore();
 
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
-    ctx.fillRect(0, ry, viewW, 1.5);
-    ctx.fillStyle = '#b38d38';
-    ctx.fillRect(0, ry + rh - 1.5, viewW, 1.5);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.55)'; ctx.fillRect(0, ry, viewW, 1.5);
+    ctx.fillStyle = '#b38d38'; ctx.fillRect(0, ry + rh - 1.5, viewW, 1.5);
 
-    ctx.fillStyle = '#1e293b';
-    ctx.strokeStyle = '#1e293b';
-    ctx.textAlign = 'center';
-
+    ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#1e293b'; ctx.textAlign = 'center';
     const zeroScreenX = ruler.worldZeroX + cameraOffsetX;
     const startMM = Math.floor((-zeroScreenX) / SCALE) - 5;
     const endMM = Math.ceil((viewW - zeroScreenX) / SCALE) + 5;
@@ -681,30 +1293,15 @@
     for (let mm = startMM; mm <= endMM; mm++) {
       const px = zeroScreenX + mm * SCALE;
       if (px < -30 || px > viewW + 30) continue;
-
       let len = 7;
       if (mm % 10 === 0) {
-        len = 22;
-        ctx.lineWidth = 1.4;
-        ctx.font = '700 13px "Plus Jakarta Sans", sans-serif';
+        len = 22; ctx.lineWidth = 1.4; ctx.font = '700 13px "Plus Jakarta Sans", sans-serif';
         ctx.fillText(mm / 10, px, ry + len + 14);
-      } else if (mm % 5 === 0) {
-        len = 13;
-        ctx.lineWidth = 1.0;
-      } else {
-        len = 7;
-        ctx.lineWidth = 0.7;
-      }
-
-      ctx.beginPath();
-      ctx.moveTo(px, ry);
-      ctx.lineTo(px, ry + len);
-      ctx.stroke();
+      } else if (mm % 5 === 0) { len = 13; ctx.lineWidth = 1.0; }
+      else { len = 7; ctx.lineWidth = 0.7; }
+      ctx.beginPath(); ctx.moveTo(px, ry); ctx.lineTo(px, ry + len); ctx.stroke();
     }
-
-    ctx.font = '600 11px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#78350f';
-    ctx.textAlign = 'left';
+    ctx.font = '600 11px "Plus Jakarta Sans", sans-serif'; ctx.fillStyle = '#78350f'; ctx.textAlign = 'left';
     ctx.fillText('шкала: см (1 дел = 1 мм)', 14, ry + rh - 12);
   }
 
@@ -714,19 +1311,12 @@
     ctx.clearRect(0, 0, w, h);
 
     let tableGrad = ctx.createLinearGradient(0, 0, 0, h);
-    tableGrad.addColorStop(0, '#f8fafc');
-    tableGrad.addColorStop(1, '#eef2f6');
-    ctx.fillStyle = tableGrad;
-    ctx.fillRect(0, 0, w, h);
+    tableGrad.addColorStop(0, '#f8fafc'); tableGrad.addColorStop(1, '#eef2f6');
+    ctx.fillStyle = tableGrad; ctx.fillRect(0, 0, w, h);
 
-    ctx.strokeStyle = 'rgba(203, 213, 225, 0.6)';
-    ctx.lineWidth = 1;
-    for (let x = (cameraOffsetX % 24); x < w; x += 24) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-    }
-    for (let y = 0; y < h; y += 24) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-    }
+    ctx.strokeStyle = 'rgba(203, 213, 225, 0.6)'; ctx.lineWidth = 1;
+    for (let x = (cameraOffsetX % 24); x < w; x += 24) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+    for (let y = 0; y < h; y += 24) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
 
     const diaPx = exactDiameterMM * SCALE;
     const r = diaPx / 2;
@@ -735,44 +1325,26 @@
     for (let i = 0; i < countN; i++) {
       const worldX = WORLD_ROW_X + r + i * diaPx;
       const screenX = worldX + cameraOffsetX;
-      if (screenX + r >= -30 && screenX - r <= w + 30) {
-        BODIES[currentType].draw(ctx, screenX, ROW_Y, r);
-      }
+      if (screenX + r >= -30 && screenX - r <= w + 30) BODIES[currentType].draw(ctx, screenX, ROW_Y, r);
     }
 
     const startScreenX = WORLD_ROW_X + cameraOffsetX;
     const endScreenX = WORLD_ROW_X + totalRowPx + cameraOffsetX;
-
-    ctx.setLineDash([4, 4]);
-    ctx.lineWidth = 1.3;
+    ctx.setLineDash([4, 4]); ctx.lineWidth = 1.3;
 
     if (startScreenX >= -10 && startScreenX <= w + 10) {
-      ctx.strokeStyle = '#10b981';
-      ctx.beginPath();
-      ctx.moveTo(startScreenX, ROW_Y - r - 12);
-      ctx.lineTo(startScreenX, ROW_Y + r + 42);
-      ctx.stroke();
+      ctx.strokeStyle = '#10b981'; ctx.beginPath(); ctx.moveTo(startScreenX, ROW_Y - r - 12); ctx.lineTo(startScreenX, ROW_Y + r + 42); ctx.stroke();
     }
-
     if (endScreenX >= -10 && endScreenX <= w + 10) {
-      ctx.strokeStyle = '#ef4444';
-      ctx.beginPath();
-      ctx.moveTo(endScreenX, ROW_Y - r - 12);
-      ctx.lineTo(endScreenX, ROW_Y + r + 42);
-      ctx.stroke();
+      ctx.strokeStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(endScreenX, ROW_Y - r - 12); ctx.lineTo(endScreenX, ROW_Y + r + 42); ctx.stroke();
     }
     ctx.setLineDash([]);
-
     drawRuler(w);
 
     if (endScreenX >= 0 && endScreenX <= w) {
-      ctx.fillStyle = '#ef4444';
-      ctx.beginPath();
-      ctx.moveTo(endScreenX, ruler.y);
-      ctx.lineTo(endScreenX - 6, ruler.y - 10);
-      ctx.lineTo(endScreenX + 6, ruler.y - 10);
-      ctx.closePath();
-      ctx.fill();
+      ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(endScreenX, ruler.y);
+      ctx.lineTo(endScreenX - 6, ruler.y - 10); ctx.lineTo(endScreenX + 6, ruler.y - 10);
+      ctx.closePath(); ctx.fill();
     }
   }
 
@@ -807,10 +1379,7 @@
     }
   }
 
-  function handleEnd() {
-    ruler.isDraggingRuler = false;
-    isPanningCamera = false;
-  }
+  function handleEnd() { ruler.isDraggingRuler = false; isPanningCamera = false; }
 
   canvas.addEventListener('mousedown', handleStart);
   window.addEventListener('mousemove', handleMove);
@@ -832,22 +1401,14 @@
   window.addEventListener('touchmove', handleMove, { passive: true });
   window.addEventListener('touchend', handleEnd);
 
-  document.getElementById('btnGoStart').onclick = () => {
-    cameraOffsetX = 35 - WORLD_ROW_X;
-    render();
-  };
-
+  document.getElementById('btnGoStart').onclick = () => { cameraOffsetX = 35 - WORLD_ROW_X; render(); };
   document.getElementById('btnGoEnd').onclick = () => {
     const w = canvas.getBoundingClientRect().width;
     const totalRowPx = countN * exactDiameterMM * SCALE;
     cameraOffsetX = w - WORLD_ROW_X - totalRowPx - 80;
     render();
   };
-
-  document.getElementById('btnAlignZero').onclick = () => {
-    ruler.worldZeroX = WORLD_ROW_X;
-    render();
-  };
+  document.getElementById('btnAlignZero').onclick = () => { ruler.worldZeroX = WORLD_ROW_X; render(); };
 
   function setN(n) {
     countN = Math.max(1, n);
@@ -878,48 +1439,34 @@
     };
   });
 
-  // Переключение СМ и ММ
   const btnUnitCM = document.getElementById('btnUnitCM');
   const btnUnitMM = document.getElementById('btnUnitMM');
 
   function updateUnitLabels() {
     const isCm = currentUnit === 'cm';
     document.getElementById('lblL').innerText = isCm ? '1. Длина ряда L (см)' : '1. Длина ряда L (мм)';
-    document.getElementById('lblD').innerText = isCm ? '3. Диаметр d (см)' : '3. Диаметр d (мм)';
+    document.getElementById('lblD').innerText = isCm ? '3. Размер зерна d (см)' : '3. Размер зерна d (мм)';
     document.getElementById('lblErr').innerText = isCm ? '4. Погрешность Δd (см)' : '4. Погрешность Δd (мм)';
     document.getElementById('lblErrFormula').innerText = isCm ? 'формула: 0.1 см ÷ N' : 'формула: 1 мм ÷ N';
-    document.getElementById('inL').placeholder = isCm ? 'например, 4.8' : 'например, 48';
+    document.getElementById('inL').placeholder = isCm ? 'например, 5.2' : 'например, 52';
     document.getElementById('inErr').placeholder = isCm ? '0.1 ÷ N' : '1 ÷ N';
     clearInputs();
   }
 
-  btnUnitCM.onclick = () => {
-    currentUnit = 'cm';
-    btnUnitCM.classList.add('active');
-    btnUnitMM.classList.remove('active');
-    updateUnitLabels();
-  };
-
-  btnUnitMM.onclick = () => {
-    currentUnit = 'mm';
-    btnUnitMM.classList.add('active');
-    btnUnitCM.classList.remove('active');
-    updateUnitLabels();
-  };
+  btnUnitCM.onclick = () => { currentUnit = 'cm'; btnUnitCM.classList.add('active'); btnUnitMM.classList.remove('active'); updateUnitLabels(); };
+  btnUnitMM.onclick = () => { currentUnit = 'mm'; btnUnitMM.classList.add('active'); btnUnitCM.classList.remove('active'); updateUnitLabels(); };
 
   function clearInputs() {
     ['inL', 'inN', 'inD', 'inErr'].forEach(id => {
       const el = document.getElementById(id);
-      el.value = '';
-      el.className = '';
+      el.value = ''; el.className = '';
     });
     document.getElementById('statusMsg').innerText = '';
   }
 
-  // Проверка решения
   document.getElementById('btnCheck').onclick = () => {
     const isCm = currentUnit === 'cm';
-    const mult = isCm ? 0.1 : 1.0; // перевод из мм в выбранные единицы
+    const mult = isCm ? 0.1 : 1.0;
 
     const uL = parseFloat(document.getElementById('inL').value.replace(',', '.'));
     const uN = parseInt(document.getElementById('inN').value);
@@ -931,58 +1478,29 @@
 
     let allOk = true;
 
-    // 1. N
     const nEl = document.getElementById('inN');
-    if (uN === countN) {
-      nEl.className = 'correct';
-    } else {
-      nEl.className = 'incorrect';
-      allOk = false;
-    }
+    if (uN === countN) { nEl.className = 'correct'; } else { nEl.className = 'incorrect'; allOk = false; }
 
-    // 2. L (допуск 1.5 мм в масштабе выбранной единицы)
     const lEl = document.getElementById('inL');
-    if (!isNaN(uL) && Math.abs(uL - trueL) <= (1.5 * mult)) {
-      lEl.className = 'correct';
-    } else {
-      lEl.className = 'incorrect';
-      allOk = false;
-    }
+    if (!isNaN(uL) && Math.abs(uL - trueL) <= (1.5 * mult)) { lEl.className = 'correct'; } else { lEl.className = 'incorrect'; allOk = false; }
 
-    // 3. d = L / N (проверяем правильность вычисления ученика)
     const dEl = document.getElementById('inD');
-    if (!isNaN(uD) && uN && !isNaN(uL) && Math.abs(uD - (uL / uN)) < (0.15 * mult)) {
-      dEl.className = 'correct';
-    } else {
-      dEl.className = 'incorrect';
-      allOk = false;
-    }
+    if (!isNaN(uD) && uN && !isNaN(uL) && Math.abs(uD - (uL / uN)) < (0.15 * mult)) { dEl.className = 'correct'; } else { dEl.className = 'incorrect'; allOk = false; }
 
-    // 4. Погрешность
     const errEl = document.getElementById('inErr');
-    if (!isNaN(uErr) && Math.abs(uErr - trueErr) < (0.05 * mult)) {
-      errEl.className = 'correct';
-    } else {
-      errEl.className = 'incorrect';
-      allOk = false;
-    }
+    if (!isNaN(uErr) && Math.abs(uErr - trueErr) < (0.05 * mult)) { errEl.className = 'correct'; } else { errEl.className = 'incorrect'; allOk = false; }
 
     const msg = document.getElementById('statusMsg');
     if (allOk) {
-      msg.innerHTML = `<span style="color:var(--success);">✓ Отлично! Все измерения сняты точно, вычисления выполнены без ошибок.</span>`;
+      msg.innerHTML = `<span style="color:var(--success);">✓ Отлично! Показания сняты верно, расчёт среднего размера крупинки точен.</span>`;
     } else {
-      let extraTip = '';
-      if (!lEl.classList.contains('correct')) {
-        if (isCm && uL > 25) extraTip = ' Кажется, вы указали длину в миллиметрах вместо сантиметров!';
-        else if (!isCm && uL < 15) extraTip = ' Кажется, вы указали длину в сантиметрах вместо миллиметров!';
-      }
-      msg.innerHTML = `<span style="color:var(--danger);">✕ Есть ошибки в подсвеченных красным полях.${extraTip}</span>`;
+      msg.innerHTML = `<span style="color:var(--danger);">✕ Есть ошибки в подсвеченных полях. Проверьте снятые показания и формулу деления.</span>`;
     }
   };
 
   // Инициализация при загрузке
   resetObjectSize();
-  setDimensions();
+  updateTeacherUI();
   document.getElementById('btnAlignZero').click();
   document.getElementById('btnGoStart').click();
 </script>
